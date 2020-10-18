@@ -18,15 +18,45 @@ This GitHub repository documents my research, project progress (git version cont
 
 > The term _programming paradigm_ is the style or the way of thinking about and approaching problems. - Lecture's notes
 
-As a practical problem, a shop simulation has been chosen. The program is to simulate the cash and stock flow, monitor customers expenditure, etc. (more precise description to be added later)
-
 (here, list the paradigms selected to deal with the task)
 
-## Shop simulation in C
+## Simulation of a shop
+
+The task of this project assignment is to apply two different programming paradigmns to solve a practical problem, so that each of the paradigms would show their advantages and disadvantages. The selected paradigms are: 
+
+a. procedural paradigm - C language
+b. object oriented paradigm - Jave language.
+
+The practical problem is to  built a simulation of a shop. The program is to simulate the cash and stock flow, monitor customers expenditure, etc. (more precise description to be added later)
+
+The following functionality is included into the simulation:
+
+1. Entities: Shop, Customer(s), Product(s), Stock
+2. Model the entities
+3. Print product info
+4. Print customer info
+5. Add item to customers list
+6. Read in stock from a file
+s
+
+## Application in C - procedural paradigm
 
 C programming language is an example of a procedural programming paradigm.
 
 ...
+
+
+## Application in C - procedural paradigm
+
+Java programming language is an example of a object oriented programming paradigm.
+
+...
+
+
+## Findings
+
+...
+
 
 ___
 ## References
