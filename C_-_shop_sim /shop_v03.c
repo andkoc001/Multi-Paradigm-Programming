@@ -12,7 +12,7 @@
 #include <stdlib.h> // required for atof() method (?)
 
 // ===== ===== =====
-// Definiton of structs. This is a data type (refered below as to an object) in C language; the concept similar to classes or objects' constructors, a blueprint.
+// Definiton of structs.
 // ===== ===== =====
 
 // ----- ----- -----
@@ -24,15 +24,15 @@ struct Product
 };
 
 // ----- ----- -----
-// This constructor defines the stock of a product and its available quantity. Note it consists of another struct object, nested inside. This struct is used to show the stock both shop and customers.
+// This struct defines the stock of a product and its available quantity. Note it consists of another struct object, nested inside. This struct is used to show the stock both shop and customers.
 struct ProductStock
 {
-  struct Product product; // cross reference to 'Product' constructor; struct type.
+  struct Product product; // cross reference to 'Product' struct; struct type.
   int quantity;           // quantity of the product available in the shop.
 };
 
 // ----- ----- -----
-// This constructor defines the shop entity. The constructor variable stock is predefined (and cross referred to another constructor).
+// This struct defines the shop entity. The struct variable stock is predefined (and cross referred to another struct).
 struct Shop
 {
   double cash;                   // The amount of maney in the shop.
@@ -41,7 +41,7 @@ struct Shop
 };
 
 // ----- ----- -----
-// This constructor defines the customer blueprint.
+// This struct defines the customer blueprint.
 struct Customer
 {
   char *name;                           // Pointer is used here, so that the size of memory is dynamically allocated, depending on the name's length.
@@ -67,7 +67,9 @@ void printProduct(struct Product prod) // This method requires a struct 'Product
 // Printing customer info
 void printCustomer(struct Customer cust) // This method takes an instance of struct 'Customer' as a parameter, refered within the method as to 'cust'. The method does not return anything.
 {
-  printf("-----\nCustomer Name: %s \nCustomer Budget: €%.2f \n\n-----\n", cust.name, cust.budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
+  printf("---- ----\n");
+  printf("Customer Name: %s \nCustomer Budget: €%.2f \n\n", cust.name, cust.budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
+  printf("==== ====\n");
   // Below we are going to print all the items (for loop) the customer has, using the 'index' variable defined in the struct.
   for (int i = 0; i < cust.index; i++) // Iteration of from i=0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
   {
@@ -78,10 +80,6 @@ void printCustomer(struct Customer cust) // This method takes an instance of str
     printf("The sub-total cost of %s to %s will be €%.2f. \n\n", cust.shoppingList[i].product.name, cust.name, cost); // Prints out cost of all items of the product
   }
 }
-
-// ===== ===== =====
-// Files operations
-// ===== ===== =====
 
 // ----- ----- -----
 // Reading data from a file line by line and converts into a variable (product stock) and add to struct that represents the shop.
@@ -108,7 +106,7 @@ struct Shop createAndStockShop() // The type has been later changed from "Void" 
   // Below we read each line and extract and assign certain data to correct variables.
   while ((read = getline(&line, &len, fp)) != -1) // Reads line by line to the end of file. "&line" referres to value of the line (I guess).
   {
-    // printf(": %s \n", line); // This is for cheking if the program reads the file; comented out for clarity
+    // printf(": %s \n", line); // This is for testing if the program reads the file; comented out for clarity
     // Method "strtok" is used to break down a string by provided delimiter (eg ",").
     char *nam = strtok(line, ","); // Exctract certain data (product name) from the line (slicing) till encounter delimiter "," and assigns to variable "name" - here with pointer, as we do not know how long is the name.
     char *pri = strtok(NULL, ","); // Exctract product price from the previous delimiter in the line (NULL) till encounter the next delimiter ",".
@@ -135,12 +133,12 @@ struct Shop createAndStockShop() // The type has been later changed from "Void" 
 }
 
 // ----- ----- -----
-// Method to create a print out. It takes "struct Shop" as a parameter.
+// Method to create a print out of the shop stock. It takes "struct Shop" as a parameter.
 void printShop(struct Shop sh)
 {
-  printf("\n");
+  printf("---- ----\n");
   printf("Shop has %.2f in cash\n", sh.cash);
-  printf("====\n");
+  printf("==== ====\n");
   for (int i = 0; i < sh.index; i++)
   {
     printProduct(sh.stock[i].product);
@@ -151,9 +149,11 @@ void printShop(struct Shop sh)
 }
 
 // ===== ===== =====
-// Main program body
+// Main program methods (chosen from the main menu).
 // ===== ===== =====
 
+// ----- ----- -----
+// Option 1 - display the shop available cash and stock
 int shop_status(void) // The 'main' function is of 'int' type, and does not return anything.
 {
 
@@ -172,8 +172,8 @@ void shop_menu()
   char char_choice[2];
   int choice = 0; // the initial value is set
 
-  system("cls");
-  system("clear");
+  system("cls");   // for Windows system
+  system("clear"); // for Linux system
 
   do
   {
@@ -181,10 +181,16 @@ void shop_menu()
     printf("Shop Main Menu:\n");
     printf("***************\n");
     printf("1. Shop status\n");
-    printf("2. Customer a - good case\n");
-    printf("3. Customer b - insufficient funds case\n");
-    printf("4. Customer c - exceeding order case\n");
+    printf("2. Customer A status - initially good case\n");
+    printf("3. Customer A shopping\n"); // customer status will be updated
+    printf("4. Customer B status - initially insufficient funds case\n");
+    printf("5. Customer B shopping\n");
+    printf("6. Customer C status - Initially exceeding order case\n");
+    printf("7. Customer C shopping\n");
+    printf("8. Interactive mode\n");
     printf("9. Exit\n");
+
+    printf("Note the sequence of the customers' shopping being processed will affect the shop status and might also affect the initial case of the customers. \n");
 
     scanf("%s", char_choice);
     choice = atoi(char_choice);
@@ -195,19 +201,22 @@ void shop_menu()
       shop_status();
       break;
     case 2:
-      // customer_good();
-      break;
-    case 3:
-      // customer_insufficient_funds();
+      // customer_a_status(); // initially good case
       break;
     case 4:
-      // customer_exceeding_order();
+      // customer_b_status(); // initially insufficient funds case
+      break;
+    case 6:
+      // customer_c_status(); // initiallt exceeding order case
+      break;
+    case 8:
+      // interactive_mode();
       break;
     case 9:
       // exit
       break;
     default:
-      printf("Wrong key. Enter the required number for desired operation.\n");
+      printf("Wrong key. Enter the option number for desired operation.\n");
       break;
     }
   } while (choice != 9);
