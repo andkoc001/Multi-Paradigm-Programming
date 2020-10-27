@@ -136,14 +136,14 @@ struct Shop createAndStockShop() // The type has been later changed from "Void" 
 // Method to create a print out of the shop stock. It takes "struct Shop" as a parameter.
 void printShop(struct Shop sh)
 {
-  printf("---- ----\n");
+  printf("----\n");
   printf("Shop has %.2f in cash\n", sh.cash);
-  printf("==== ====\n");
+  printf("==== ==== ====\n");
   for (int i = 0; i < sh.index; i++)
   {
     printProduct(sh.stock[i].product);
     printf("Available amount: %d\n", sh.stock[i].quantity);
-    printf("----\n");
+    printf("---- ---- ----\n");
   }
   printf("\n");
 }
@@ -154,11 +154,20 @@ void printShop(struct Shop sh)
 
 // ----- ----- -----
 // Option 1 - display the shop available cash and stock
-int shop_status(void) // The 'main' function is of 'int' type, and does not return anything.
+int shop_status(void) // This method is of 'int' type, and does not return anything.
 {
-
-  struct Shop shop = createAndStockShop(); // This method will read data from a file.
+  struct Shop shop = createAndStockShop(); // This struct calls the method that will read data from a file.
   printShop(shop);
+  return 0;
+}
+
+// ----- ----- -----
+// Option 2 - process customer A (good case) shopping
+int customer_A_status(void)
+{
+  //print_customer_shopping_list(shpping_list);
+  //struct Customer customer_A = process_customer();
+  //print_customer_summary(customer_A);
   return 0;
 }
 
@@ -170,7 +179,7 @@ int shop_status(void) // The 'main' function is of 'int' type, and does not retu
 void shop_menu()
 {
   char char_choice[2];
-  int choice = 0; // the initial value is set
+  int choice = -1; // the initial value is set just to initialise the variable
 
   system("cls");   // for Windows system
   system("clear"); // for Linux system
@@ -181,17 +190,17 @@ void shop_menu()
     printf("Shop Main Menu:\n");
     printf("***************\n");
     printf("1. Shop status\n");
-    printf("2. Customer A status - initially good case\n");
-    printf("3. Customer A shopping\n"); // customer status will be updated
-    printf("4. Customer B status - initially insufficient funds case\n");
-    printf("5. Customer B shopping\n");
-    printf("6. Customer C status - Initially exceeding order case\n");
-    printf("7. Customer C shopping\n");
+    // printf("2. Customer A status - initially good case\n");
+    printf("3. Customer A shopping - good case\n"); // customer status will be updated
+    // printf("4. Customer B status - initially insufficient funds case\n");
+    printf("5. Customer B shopping - insufficient funds case\n");
+    // printf("6. Customer C status - Initially exceeding order case\n");
+    printf("7. Customer C shopping - exceeding order case\n");
     printf("8. Interactive mode\n");
     printf("9. Exit\n");
+    printf("NB: The sequence of the customers being processed might affect the initial case of the customers. \n");
 
-    printf("Note the sequence of the customers' shopping being processed will affect the shop status and might also affect the initial case of the customers. \n");
-
+    fflush(stdin); // flushes the input string from any left overs from previous inputs
     scanf("%s", char_choice);
     choice = atoi(char_choice);
 
@@ -201,13 +210,13 @@ void shop_menu()
       shop_status();
       break;
     case 2:
-      // customer_a_status(); // initially good case
+      // customer_A_status(); // initially good case
       break;
     case 4:
-      // customer_b_status(); // initially insufficient funds case
+      // customer_B_status(); // initially insufficient funds case
       break;
     case 6:
-      // customer_c_status(); // initiallt exceeding order case
+      // customer_C_status(); // initiallt exceeding order case
       break;
     case 8:
       // interactive_mode();
