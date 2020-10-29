@@ -28,16 +28,16 @@ struct Product
 struct ProductQuantity
 {
   struct Product product; // cross reference to 'Product' struct; struct type.
-  int quantity;           // quantity of the product available in the shop.
+  int quantity;           // quantity of the product available in the shop/customer stok.
 };
 
 // ----- ----- -----
-// This struct defines the shop entity. The struct variable stock is predefined (and cross referred to another struct).
+// This struct defines the shop entity. The struct variable stock is predefined (and cross referred to other nested structs).
 struct Shop
 {
   double cash;                      // The amount of maney in the shop.
   struct ProductQuantity stock[20]; // Nested 'ProductQuantity' struct (which in turn consists of nested 'Product' struct). This variable has a preset limit of items.
-  int index;                        // This variable is used for cycling through the content (for loop); default (starting) value of index is 0.
+  int index;                        // This variable is used for cycling through the content ('for loop'); default (starting) value of index is 0.
 };
 
 // ----- ----- -----
@@ -54,19 +54,19 @@ struct Customer
 // Definition of methods
 // ===== ===== =====
 
-// Reminder: In C functions exchange information by means of parameters and arguments. The term parameter refers to any declaration within the parentheses following the function name in a function declaration or definition; the term argument refers to any expression within the parentheses of a function call. (Source: https://www.cs.auckland.ac.nz/references/unix/digital/AQTLTBTE/DOCU_056.HTM)
+// Terminology reminder: In C functions exchange information by means of parameters and arguments. The term parameter refers to any declaration within the parentheses following the function name in a function declaration or definition; the term argument refers to any expression within the parentheses of a function call. (Source: https://www.cs.auckland.ac.nz/references/unix/digital/AQTLTBTE/DOCU_056.HTM)
 
 // ----- ----- -----
 // Printing product info
-void printProduct(struct Product prod) // This method requires a struct 'Product' (takes as a parameter), named localy within the method as to 'prod'. The method does not return anything.
+void printProduct(struct Product prod) // This method requires a struct 'Product' (takes it as a parameter), named localy within the method as to 'prod'. The method does not return anything.
 {
-  printf("Product Name: %s \nProduct Price: €%.2f \n", prod.name, prod.price); // Values of prod.name and prod.price of the passed instance of the struct when the method was called. These are referring to product's properties defined the strut instance (within 'Main' method).
+  printf("Product Name: %s \nProduct Price: €%.2f \n", prod.name, prod.price); // Values of prod.name and prod.price of the passed instance of the struct when the method was called. These are referring to product's properties defining the strut instance.
 }
 
 // ----- ----- -----
 // Create shop
-// Reading data from a file line by line and converts into a variable (product stock) and add to struct that represents the shop.
-struct Shop createAndStockShop() // The type has been later changed from "Void" to "struct Shop".
+// Reading data from a file line by line and converts into a variables (shop cash and stock).
+struct Shop createAndStockShop() // This creates a struct of 'Shop' type and its actual instance is a results (return) of the function createAndStockShop().
 {
 
   // Reading file script is based on https://stackoverflow.com/a/3501681
@@ -77,42 +77,44 @@ struct Shop createAndStockShop() // The type has been later changed from "Void" 
 
   // reading the file.
   fp = fopen("shop_stock.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
+
   // Error handling (in case the file cannot be found)
   if (fp == NULL)
-    exit(EXIT_FAILURE);
+    printf("File not found\n");
+  exit(EXIT_FAILURE);
 
   // read the first line only - the initial value of cash available in shop
   read = getline(&line, &len, fp);
   double cashInShop = atof(line);
-  struct Shop shop = {cashInShop}; // This struct represents shop's initial cash
+  struct Shop shop = {cashInShop}; // This struct initialises the 'shop' instance of 'Shop' struct, and saves the shop's initial cash
 
   // Below we read each line and extract and assign certain data to correct variables.
-  while ((read = getline(&line, &len, fp)) != -1) // Reads line by line to the end of file. "&line" referres to value of the line (I guess).
+  while ((read = getline(&line, &len, fp)) != -1) // Reads line by line to the end of file. "&line" referres to value of the line (I guess); -1 means to the end of file.
   {
     // printf(": %s \n", line); // This is for testing if the program reads the file; comented out for clarity
-    // Method "strtok" is used to break down a string by provided delimiter (eg ",").
+
+    // Function "strtok" is used to break down a string by provided delimiter (eg ",").
     char *nam = strtok(line, ","); // Exctract certain data (product name) from the line (slicing) till encounter delimiter "," and assigns to variable "name" - here with pointer, as we do not know how long is the name.
     char *pri = strtok(NULL, ","); // Exctract product price from the previous delimiter in the line (NULL) till encounter the next delimiter ",".
-    char *qua = strtok(NULL, ","); // Exctract product available quantity from the previous delimiter in the line (NULL) till encounter the next delimiter ",".
-    // Printing the outcome. Note 1: quantity is read from file as string type. Note 2: the method introduces a line break after the line from file was read (because by default it reads data as string).
+    char *qua = strtok(NULL, ","); // Exctract product available quantity from the previous delimiter in the line (NULL) till encounter the next delimiter "," (or end of line?).
+
+    // Printing the outcome. Note 1: quantity is read from file as string type. Note 2: the method introduces a line break after the line from file that was read (because by default it reads data as string).
+
     // To convert string into intiger, we will use "atoi" method, and to float - "atof" method.
-    int quantity = atoi(qua);
     double price = atof(pri);
-    char *name = malloc(sizeof(char) * 50); // max length of the product name to be read from file is limited to 50 characters
-    strcpy(name, nam);                      // copies variable nam to variable name (initialised in the line above)
+    int quantity = atoi(qua);
+    char *name = malloc(sizeof(char) * 50); // max length of the product name read from the file is dynamically allocated in the memory (with a pointer) and is limited to 50 characters
+    strcpy(name, nam);                      // copies variable 'nam' (initialised in the line above) to string variable 'name'
+
+    // assign the read values to the struct placeholders
     struct Product product = {name, price};
     struct ProductQuantity stockItem = {product, quantity};
+
     shop.stock[shop.index++] = stockItem; // The above data extracted from file will be added to shop stock of struct "Shop".
-    // printf("Product: %s, €%.2f; available: %d pcs.\n", name, price, quantity); // Commented out as replaced by a dedicated method "printShop" below.
+    // printf("Product: %s, €%.2f; available: %d pcs.\n", name, price, quantity); // Testing; the content of the struck will be read with a dedicated method "printShop" below.
   }
 
-  fclose(fp);
-  // error handling
-  //if (line)
-  //  free(line);
-  //exit(EXIT_SUCCESS);
-
-  return shop;
+  return shop; // this returns the struct 'shop' of Shop type
 }
 
 // ----- ----- -----
@@ -128,46 +130,55 @@ struct Customer create_customer()
 
   // reading the file.
   fp = fopen("customer_good.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
+
   // Error handling (in case the file cannot be found)
   if (fp == NULL)
-    exit(EXIT_FAILURE);
+    printf("File not found\n");
+  exit(EXIT_FAILURE);
 
   // read the first line only - the name of the customer and available money
   read = getline(&line, &len, fp);
-  // Method "strtok" is used to break down a string by provided delimiter (eg ",").
-  char *c_nam = strtok(line, ","); // Exctract certain data (customer name) from the line (slicing) till encounter delimiter "," and assigns to variable "name" - here with pointer, as we do not know how long is the name.
-  char *c_qua = strtok(NULL, ","); // Exctract product available quantity from the previous delimiter in the line (NULL) till encounter the next delimiter ",".
+
+  // Function "strtok" is used to break down a string by provided delimiter (eg ",").
+  char *nam = strtok(line, ","); // Exctract certain data (customer name) from the line (slicing) till encounter delimiter "," and assigns to variable "name" - here with pointer, as we do not know how long is the name.
+  char *bud = strtok(NULL, ","); // Exctract product available quantity from the previous delimiter in the line (NULL) till encounter the next delimiter "," (or end of line?).
+
   // Printing the outcome. Note 1: quantity is read from file as string type. Note 2: the method introduces a line break after the line from file was read (because by default it reads data as string).
+
   // To convert string into intiger, we will use "atoi" method, and to float - "atof" method.
-  int c_budget = atoi(c_qua);
-  char *c_name = malloc(sizeof(char) * 50); // max length of the customer name to be read from file is limited to 50 characters
-  strcpy(c_name, c_nam);
-  struct Customer customer_A = {c_name, c_budget};
+  char *name = malloc(sizeof(char) * 50); // max length of the customer name to be read from file is limited to 50 characters
+  strcpy(name, nam);                      // copies variable 'nam' (initialised in the line above) to string variable 'name'
+  int budget = atof(bud);
+
+  //assign name and budget to the customer - use the above variables (name and budget)
+  struct Customer customer_A = {name, budget};
+  printf("custooomer: %s, money: %.2f\n", customer_A.name, budget); // for testing
 
   // read the remaining lines from the file, extract and assign certain data to the appropriate variables.
-  while ((read = getline(&line, &len, fp)) != -1) // Reads line by line to the end of file. "&line" referres to value of the line (I guess).
+  while ((read = getline(&line, &len, fp)) != -1) // Reads line by line to the end of file. "&line" referres to value of the line (I guess); -1 means until the end of file.
   {
     // Method "strtok" is used to break down a string by provided delimiter (eg ",").
     char *p_nam = strtok(line, ","); // Exctract certain data (product name) from the line (slicing) till encounter delimiter "," and assigns to variable "name" - here with pointer, as we do not know how long is the name.
     char *p_qua = strtok(NULL, ","); // Exctract product available quantity from the previous delimiter in the line (NULL) till encounter the next delimiter ",".
-    // Printing the outcome. Note 1: quantity is read from file as string type. Note 2: the method introduces a line break after the line from file was read (because by default it reads data as string).
-    // To convert string into intiger, we will use "atoi" method, and to float - "atof" method.
-    int quantity = atoi(p_qua);
-    char *p_name = malloc(sizeof(char) * 50); // max length of the product name to be read from file is limited to 50 characters
-    strcpy(p_name, p_nam);                    // copies variable nam to variable name (initialised in the line above)
 
-    struct Product product = {p_name, 0};
+    // Printing the outcome. Note 1: quantity is read from file as string type. Note 2: the method introduces a line break after the line from file was read (because by default it reads data as string).
+
+    // To convert string into intiger, we will use "atoi" method, and to float - "atof" method.
+    char *name = malloc(sizeof(char) * 50); // max length of the product name to be read from file is limited to 50 characters
+    strcpy(name, p_nam);                    // copies variable nam to variable name (initialised in the line above)
+    int quantity = atoi(p_qua);
+
+    struct Product product = {name}; // variable product.price is omitted here - is that right?
+    //printf("Test: %s\n", product.name);
     struct ProductQuantity shopping_list_item = {product, quantity};
-    customer_A.shoppingList[customer_A.index++] = shopping_list_item; // The above data extracted from file will be added to shop stock of struct "Shop".
-    printf("teeeeest: %s, qty: %d\n", p_name, quantity);
-    // printf("Product: %s, €%.2f; available: %d pcs.\n", name, price, quantity); // Commented out as replaced by a dedicated method "printShop" below.
+    //printf("Teeest: %s, qty: %d\n", product, quantity);
+
+    customer_A.shoppingList[customer_A.index++] = shopping_list_item; // The above data extracted from file will be added to customer shoppingList.
+    printf("Product: %s; qty: %d pcs.\n", name, quantity);            // for testing only
   }
 
-  fclose(fp);
-  // error handling
-  //if (line)
-  //  free(line);
-  //exit(EXIT_SUCCESS);
+  //printf("Test4: %s\n", customer_A.shopping_list_item.product.name);
+  //printf("Test5: Product: %s; qty: __ pcs.\n", name[1]);
 
   return customer_A;
 }
