@@ -68,7 +68,6 @@ void printProduct(struct Product prod) // This method requires a struct 'Product
 // Reading data from a file line by line and converts into a variables (shop cash and stock).
 struct Shop createAndStockShop() // This creates a struct of 'Shop' type and its actual instance is a results (return) of the function createAndStockShop().
 {
-
   // Reading file script is based on https://stackoverflow.com/a/3501681
   FILE *fp;
   char *line = NULL;
@@ -80,8 +79,10 @@ struct Shop createAndStockShop() // This creates a struct of 'Shop' type and its
 
   // Error handling (in case the file cannot be found)
   if (fp == NULL)
+  {
     printf("File not found\n");
-  exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
+  }
 
   // read the first line only - the initial value of cash available in shop
   read = getline(&line, &len, fp);
@@ -133,8 +134,10 @@ struct Customer create_customer()
 
   // Error handling (in case the file cannot be found)
   if (fp == NULL)
+  {
     printf("File not found\n");
-  exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
+  }
 
   // read the first line only - the name of the customer and available money
   read = getline(&line, &len, fp);
@@ -152,7 +155,7 @@ struct Customer create_customer()
 
   //assign name and budget to the customer - use the above variables (name and budget)
   struct Customer customer_A = {name, budget};
-  printf("custooomer: %s, money: %.2f\n", customer_A.name, budget); // for testing
+  //printf("Ccustomer: %s, money: %.2f\n", customer_A.name, customer_A.budget); // for testing
 
   // read the remaining lines from the file, extract and assign certain data to the appropriate variables.
   while ((read = getline(&line, &len, fp)) != -1) // Reads line by line to the end of file. "&line" referres to value of the line (I guess); -1 means until the end of file.
@@ -169,16 +172,33 @@ struct Customer create_customer()
     int quantity = atoi(p_qua);
 
     struct Product product = {name}; // variable product.price is omitted here - is that right?
-    //printf("Test: %s\n", product.name);
-    struct ProductQuantity shopping_list_item = {product, quantity};
-    //printf("Teeest: %s, qty: %d\n", product, quantity);
+    // printf("Test: %s\n", product.name); //test Ok
 
-    customer_A.shoppingList[customer_A.index++] = shopping_list_item; // The above data extracted from file will be added to customer shoppingList.
-    printf("Product: %s; qty: %d pcs.\n", name, quantity);            // for testing only
+    struct ProductQuantity shopping_list_item = {product, quantity}; // 'shopping_list_item' is just a temporary variable
+    // printf("Teeest: %s, qty: %d\n", shopping_list_item.product, shopping_list_item.quantity); //test Ok
+    customer_A.shoppingList[customer_A.index++] = shopping_list_item; // The above values from 'shopping_list_items' are now assigned to 'shoppingList[index]'.
+
+    printf("qty, %d\n", customer_A.shoppingList[customer_A.index]);
   }
+  printf("Number of items: %d\n", customer_A.index);                       // test OK
+  printf("1st product: %s\n", customer_A.shoppingList[0].product.name);    // test OK
+  printf("Amount of 1st item: %d\n", customer_A.shoppingList[0].quantity); // test OK
+  printf("****\n\n");
 
-  //printf("Test4: %s\n", customer_A.shopping_list_item.product.name);
-  //printf("Test5: Product: %s; qty: __ pcs.\n", name[1]);
+  /* // test OK
+  for (int i = 0; i < customer_A.index; i++)
+  {
+    printf("Available amount: %d\n", customer_A.shoppingList[i].quantity);
+    printf("---- ---- ----\n");
+  }
+  printf("\n");
+  */
+
+  //printf("Test4: %s\n", customer_A.name); // test OK
+  //printf("Test5: %.2f\n", customer_A.budget); // test OK
+
+  //printf("%s's budget: €%.2f; Shopping item 1: %s, qty: __ pcs.\n", name, budget, customer_A.shoppingList[0]); // Testing; the content of the struck will be read with a dedicated method "printShop" below.
+  //printf("Test5: Customer: %s; product: __, qty: __ pcs.\n", name);
 
   return customer_A;
 }
