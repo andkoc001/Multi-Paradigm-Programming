@@ -68,9 +68,16 @@ struct Customer
 // Printing product info
 void printProduct(struct Product prod) // This method requires a struct 'Product' (takes it as a parameter), named localy within the method as to 'prod'. The method does not return anything.
 {
-  printf("Product Name: %s; Product Price: €%.2f \n", prod.name, prod.price); // Values of prod.name and prod.price of the passed instance of the struct when the method was called. These are referring to product's properties defining the strut instance.
+  // if the price is  defined (we are showing the shop stock), then both name and price are shown; otherwise (we are showing the customer shopping list) only product name is showm
+  if (prod.price == 0)
+  {
+    printf("Product: %s; ", prod.name); // Values of prod.name and prod.price of the passed instance of the struct when the method was called. These are referring to product's properties defining the strut instance.
+  }
+  else
+  {
+    printf("Product: %s; \tPrice: €%.2f \t", prod.name, prod.price); // Values of prod.name and prod.price of the passed instance of the struct when the method was called. These are referring to product's properties defining the strut instance.
+  }
 }
-
 // Getting product price from another struct
 double get_product_price(struct Product prod) //  The method does not return anything.
 {
@@ -205,6 +212,7 @@ struct Customer create_customer()
   // printf("****\n\n");
 
   // print customer shopping list
+  /*
   printf("----\n");
   printf("Customer: %s, budget: €%.2f\n", customer_A.name, customer_A.budget); // test OK
   //printf("---- ---- ----\n");
@@ -214,6 +222,7 @@ struct Customer create_customer()
     printf("Product: %s; quantity: %d\n", customer_A.shoppingList[i].product.name, customer_A.shoppingList[i].quantity);
   }
   printf("\n");
+  */
 
   // show customer's shopping list by calling relevant method
   // printCustomer(struct Customer customer_A)
@@ -226,9 +235,8 @@ struct Customer create_customer()
 void printCustomer(struct Customer cust) // This method takes an instance of struct 'Customer' as a parameter, refered within the method as to 'cust'. The method does not return anything.
 {
   // Show customers details
-  printf("---- ----\n");
-  printf("Customer Name: %s \nCustomer Budget: €%.2f \n", cust.name, cust.budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
-  printf("==== ====\n");
+  printf("Customer Name: %s, budget: €%.2f \n", cust.name, cust.budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
+  printf("---- ---- ----\n");
 
   //show customer's shopping list
   // Below we are going to print all the items (for loop) the customer has, using the 'index' variable defined in the struct.
@@ -239,8 +247,8 @@ void printCustomer(struct Customer cust) // This method takes an instance of str
     // Calculating sub-total cost of all items of the i-th product (of the same kind).
     double cost = cust.shoppingList[i].quantity * cust.shoppingList[i].product.price; // qty*price
 
-    printf("%s orders %d of above product. ", cust.name, cust.shoppingList[i].quantity);                              // example of chain-accessing the data in the nested stucts
-    printf("The sub-total cost of %s to %s will be €%.2f. \n\n", cust.shoppingList[i].product.name, cust.name, cost); // Prints out cost of all items of the product
+    printf("\tquantity %d. ", cust.shoppingList[i].quantity); // example of chain-accessing the data in the nested stucts
+    printf("Sub-total cost will be €%.2f. \n", cost);         // Prints out cost of all items of the product
   }
 }
 
@@ -248,16 +256,39 @@ void printCustomer(struct Customer cust) // This method takes an instance of str
 // Method to create a print out of the shop stock. It takes "struct Shop" as a parameter.
 void printShop(struct Shop sh)
 {
-  printf("----\n");
   printf("Shop has €%.2f in cash\n", sh.cash);
   printf("==== ==== ====\n");
   for (int i = 0; i < sh.index; i++)
   {
     printProduct(sh.stock[i].product);
     printf("Available amount: %d\n", sh.stock[i].quantity);
-    printf("---- ---- ----\n");
   }
   printf("\n");
+}
+
+// ----- ----- -----
+void process_order(struct Customer cust, struct Shop sh) // This method takes an instance of struct 'Customer' as a parameter, refered within the method as to 'cust'. The method does not return anything.
+{
+  // Show customers details
+  printf("Customer Name: %s, budget: €%.2f \n", cust.name, cust.budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
+  printf("---- ---- ----\n");
+
+  // initialise auxiliary variables
+  double total_cost = 0;
+  //int customer_wants = cust.shoppingList[0].quantity;
+
+  //show customer's shopping list
+  for (int i = 0; i < cust.index; i++) // Iteration of from i=0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
+  {
+
+    printf("Customer wants product: %s, \tquantity %d. ", cust.shoppingList[i].product, cust.shoppingList[i].quantity); // example of chain-accessing the data in the nested stucts
+
+    double sub_total = cust.shoppingList[i].quantity * sh.stock->product.price; // qty*price
+    printf("Sub-total cost will be €%.2f. \n", sub_total);                      // Prints out cost of all items of the product
+
+    total_cost = total_cost + sub_total;
+  }
+  printf("Total cost will be €%.2f. \n", total_cost); // Prints out cost of all items of the product
 }
 
 // ===== ===== =====
@@ -278,8 +309,10 @@ int shop_status(void) // This method is of 'int' type, and does not return anyth
 void customer_A_shopping(void)
 {
   // create customer A struct (good case)
+  struct Shop shop = createAndStockShop();        // This struct calls the method that will read data from a file.
   struct Customer customer_A = create_customer(); // This struct calls the method that will read data from a file.
-  printCustomer(customer_A);
+  //printCustomer(customer_A);
+  process_order(customer_A, shop);
   return 0;
 }
 
