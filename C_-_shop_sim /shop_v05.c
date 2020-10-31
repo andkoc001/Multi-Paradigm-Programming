@@ -380,6 +380,7 @@ void shop_menu()
 
 int main()
 {
+
   shop_menu(); // calls the method that displays the shop menu
 
   return 0;
