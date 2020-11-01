@@ -56,7 +56,7 @@ struct Shop createAndStockShop()
 	size_t len = 0;
 	ssize_t read;
 
-	fp = fopen("stock_original.csv", "r");
+	fp = fopen("../stock_original.csv", "r");
 	if (fp == NULL)
 		exit(EXIT_FAILURE);
 

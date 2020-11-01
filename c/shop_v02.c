@@ -96,7 +96,7 @@ struct Shop createAndStockShop() // The type has been later changed from "Void" 
   size_t read;
 
   // reading the file.
-  fp = fopen("stock.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
+  fp = fopen("../stock.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
   // Error handling (in case the file cannot be found)
   if (fp == NULL)
     exit(EXIT_FAILURE);
