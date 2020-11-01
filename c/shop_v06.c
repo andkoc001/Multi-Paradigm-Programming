@@ -245,35 +245,64 @@ void process_order(struct Customer cust, struct Shop sh)
 
   // initialise auxiliary variables
   double total_cost = 0;
+
   //int customer_wants = cust.shoppingList[0].quantity;
 
   //show customer's shopping list
   for (int i = 0; i < cust.index; i++) // Iteration of from i=0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
   {
+    // Show customers details
+    double sub_total = 0;
 
-    printf("Customer wants product: %s, \tquantity %d. ", cust.shoppingList[i].product, cust.shoppingList[i].quantity); // example of chain-accessing the data in the nested stucts
+    printf("Customer wants product: %s, quantity %d. ", cust.shoppingList[i].product, cust.shoppingList[i].quantity); // example of chain-accessing the data in the nested stucts
 
-    // Calculating sub-total cost of all items of the i-th product (of the same kind).
-    double sub_total = cust.shoppingList[i].quantity * sh.stock[i].product.price; // qty*price
-    printf("Sub-total cost will be €%.2f. \n", sub_total);                        // Prints out cost of all items of the product
+    // Calculating sub-total cost of all items of the i-th product in customer's shopping list.
 
-    total_cost = total_cost + sub_total;
+    char *cust_item_name = cust.shoppingList[i].product.name; // assign the i-th product from the customer schopping list as a shorthand
+
+    // check whether the product from customer's shopping list is matches with the shop stock list of products
+    int match_exist = 0;
+
+    // Iterate through shop stock list to match items from customer's shopping list
+    for (int j = 0; j < sh.index; j++)
+    {
+
+      char *sh_item_name = sh.stock[j].product.name; // assign the j-th product from the shop stock list
+
+      if (strcmp(cust_item_name, sh_item_name) == 0) // if there is match
+      {
+        match_exist++;
+
+        // perform the cost of the i-th item from the customer's shopping list
+        double sub_total = cust.shoppingList[i].quantity * sh.stock[i].product.price; // qty*price
+        printf("\tSub-total cost will be €%.2f. \n", sub_total);                      // Prints out cost of all items of the product
+
+        // addition of sub totals
+        total_cost = total_cost + sub_total;
+      }
+    }
+
+    // if customer wants a product that is not in the shop
+    if (match_exist == 0) // there is no match
+    {
+      printf("\tThis product not available. Sub-total cost will be €%.2f. \n", sub_total); // Prints out cost of all items of the product
+    }
   }
-  printf("Total cost will be €%.2f. \n", total_cost); // Prints out cost of all items of the product
+
+  printf("\nTotal cost will be €%.2f. \n", total_cost); // Prints out cost of all items of the product
 
   // Check whether the customer can afford the desired items
   if (cust.budget < total_cost)
   {
-    printf("Sub-total cost will be €%.2f. \n", total_cost); // Prints out cost of all items of the product
     printf("Unfortunately, you do not have enough money for all the desired items. You are short of €%.2f. ", (total_cost - cust.budget));
     printf("Come back with more frinds (money) or negotiate your shopping list.\n");
   }
   else
   {
 
-    // Check whether there is enough stock to fill the order
+    //////// // Check whether there is enough stock to fill the order
 
-    printf("You have enough money to proceed. After shopping you will still have €%.2f. Proceeding...\n", (cust.budget - total_cost));
+    printf("After shopping the remaining money will be €%.2f. \n", (cust.budget - total_cost));
   };
 }
 
