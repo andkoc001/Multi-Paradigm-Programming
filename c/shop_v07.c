@@ -142,8 +142,9 @@ struct Shop createAndStockShop() // This creates a struct of 'Shop' type and its
 // ----- ----- -----
 // Process customer shopping
 // Reading data from a file line by line and converts into a variable (product stock) and add to struct that represents the customer.
-struct Customer create_customer()
+struct Customer create_customer(path_to_customer)
 {
+
   // Reading file script is based on https://stackoverflow.com/a/3501681
   FILE *fp;
   char *line = NULL;
@@ -151,7 +152,7 @@ struct Customer create_customer()
   size_t read;
 
   // reading the file.
-  fp = fopen("../customer_good.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
+  fp = fopen(path_to_customer, "r"); // The file is in the same directory, "r" means it is to be read only.
   //fp = fopen("../customer_insufficient_funds.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
   //fp = fopen("../customer_exceeding_order.csv", "r"); // The file is in the same directory, "r" means it is to be read only.
 
@@ -339,11 +340,39 @@ int shop_status(void) // This method is of 'int' type, and does not return anyth
 void customer_A_shopping(void)
 {
   // create customer A struct (good case)
-  struct Shop shop = createAndStockShop();        // This struct calls the method that will read data from a file.
-  struct Customer customer_A = create_customer(); // This struct calls the method that will read data from a file.
+  struct Shop shop = createAndStockShop();                              // This struct calls the method that will read data from a file.
+  struct Customer customer_A = create_customer("../customer_good.csv"); // This struct calls the method that will read data from a file.
 
   // show customer's shopping list by calling relevant method
   process_order(customer_A, shop);
+
+  return 0;
+}
+
+// ----- ----- -----
+// Option 3 - process customer B (insufficient funds case) shopping
+void customer_B_shopping(void)
+{
+  // create customer A struct (good case)
+  struct Shop shop = createAndStockShop();                                            // This struct calls the method that will read data from a file.
+  struct Customer customer_B = create_customer("../customer_insufficient_funds.csv"); // This struct calls the method that will read data from a file.
+
+  // show customer's shopping list by calling relevant method
+  process_order(customer_B, shop);
+
+  return 0;
+}
+
+// ----- ----- -----
+// Option 4 - process customer A (exceeding order case) shopping
+void customer_C_shopping(void)
+{
+  // create customer A struct (good case)
+  struct Shop shop = createAndStockShop();                                         // This struct calls the method that will read data from a file.
+  struct Customer customer_C = create_customer("../customer_exceeding_order.csv"); // This struct calls the method that will read data from a file.
+
+  // show customer's shopping list by calling relevant method
+  process_order(customer_C, shop);
 
   return 0;
 }
@@ -388,10 +417,10 @@ void shop_menu()
       customer_A_shopping(); // initially good case
       break;
     case 3:
-      // customer_B_shopping(); // initially insufficient funds  case
+      customer_B_shopping(); // initially insufficient funds case
       break;
     case 4:
-      // customer_C_shopping(); // initially exceeding order case
+      customer_C_shopping(); // initially exceeding order case
       break;
     case 5:
       // interactive_mode();
