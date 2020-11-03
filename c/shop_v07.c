@@ -316,7 +316,19 @@ void process_order(struct Customer cust, struct Shop sh)
   else
   {
 
-    //////// // Check whether there is enough stock to fill the order
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
+    //////// // Update the stock
 
     printf("After shopping the remaining money will be €%.2f. \n", (cust.budget - total_cost));
   };
