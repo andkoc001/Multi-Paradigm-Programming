@@ -264,11 +264,16 @@ void process_order(struct Customer cust, struct Shop *sh)
     // check whether the product from customer's shopping list is matches with the shop stock list of products
     int match_exist = 0;
 
+    //test
+    printf("Test1: product name in shop: %s ", sh->stock[i].product.name); // why does it show null
+
     // Iterate through shop stock list to match items from customer's shopping list
     for (int j = 0; j < sh->index; j++)
     {
-
       char sh_item_name = sh->stock[j].product.name; // assign the j-th product from the shop stock list
+
+      //test
+      printf("Test2: Shop product name: %s, dddd %s. ", sh_item_name, sh->stock[j].product.name);
 
       if (strcmp(cust_item_name, sh_item_name) == 0) // if there is match
       {
