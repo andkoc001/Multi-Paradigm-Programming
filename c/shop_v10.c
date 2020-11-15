@@ -225,6 +225,7 @@ void process_order(struct Customer cust, struct Shop *sh)
   // Show customers details
   printf("Customer Name: %s, budget: €%.2f \n", cust.name, cust.budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
   printf("---- ---- ----\n");
+  printf("shop cash: €%.2f \n", sh->cash); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
 
   // initialise auxiliary variables
   double total_cost = 0;
@@ -247,7 +248,7 @@ void process_order(struct Customer cust, struct Shop *sh)
     int match_exist = 0;
 
     //test
-    printf("Test1: product name in shop: %s ", sh->stock->product.name); // sh->stock[i].product.name);
+    // printf("Test1: product name in shop: %s ", sh->stock->product.name); // sh->stock[i].product.name);
 
     // Iterate through shop stock list to match items from customer's shopping list
     for (int j = 0; j < sh->index; j++)
@@ -356,7 +357,7 @@ void customer_A_shopping(struct Shop *sh)
 // Option 3 - process customer B (insufficient funds case) shopping
 void customer_B_shopping(struct Shop *sh)
 {
-  // create customer A struct (good case)
+  // create customer B struct (good case)
   // struct Shop shop = createAndStockShop();                                            // This struct calls the method that will read data from a file.
   struct Customer customer_B = create_customer("../customer_insufficient_funds.csv"); // This struct calls the method that will read data from a file.
 
@@ -368,7 +369,7 @@ void customer_B_shopping(struct Shop *sh)
 // Option 4 - process customer A (exceeding order case) shopping
 void customer_C_shopping(struct Shop *sh)
 {
-  // create customer A struct (good case)
+  // create customer C struct (good case)
   //struct Shop shop = createAndStockShop();                                         // This struct calls the method that will read data from a file.
   struct Customer customer_C = create_customer("../customer_exceeding_order.csv"); // This struct calls the method that will read data from a file.
 
@@ -412,21 +413,48 @@ void shop_menu(struct Shop sh)
     case 1:
       printShop(&sh);
       break;
-    case 2:
-      customer_A_shopping(&sh); // initially good case
+    case 2:; // semicolon here, because: https://www.educative.io/edpresso/resolving-the-a-label-can-only-be-part-of-a-statement-error
+      // create customer A struct (good case)
+      // struct Shop shop = createAndStockShop();                              // This struct calls the method that will read data from a file.
+      struct Customer customer_A = create_customer("../customer_good.csv"); // This struct calls the method that will read data from a file.
+
+      // show customer's shopping list by calling relevant method
+      process_order(customer_A, &sh);
+
+      //customer_A_shopping(&sh); // initially good case
       break;
-    case 3:
-      customer_B_shopping(&sh); // initially insufficient funds case
+
+    case 3:;
+
+      // create customer B struct (good case)
+      // struct Shop shop = createAndStockShop();                                            // This struct calls the method that will read data from a file.
+      struct Customer customer_B = create_customer("../customer_insufficient_funds.csv"); // This struct calls the method that will read data from a file.
+
+      // show customer's shopping list by calling relevant method
+      process_order(customer_B, &sh);
+
+      // customer_B_shopping(&sh); // initially insufficient funds case
       break;
-    case 4:
-      customer_C_shopping(&sh); // initially exceeding order case
+
+    case 4:;
+      // create customer C struct (good case)
+      //struct Shop shop = createAndStockShop();                                         // This struct calls the method that will read data from a file.
+      struct Customer customer_C = create_customer("../customer_exceeding_order.csv"); // This struct calls the method that will read data from a file.
+
+      // show customer's shopping list by calling relevant method
+      process_order(customer_C, &sh);
+
+      // customer_C_shopping(&sh); // initially exceeding order case
       break;
+
     case 5:
       // interactive_mode();
       break;
+
     case 9:
       // exit
       break;
+
     default:
       printf("Wrong key. Enter the option number for desired operation.\n");
       break;
