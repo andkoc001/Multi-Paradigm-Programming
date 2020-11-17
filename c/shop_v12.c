@@ -87,7 +87,7 @@ double get_product_price(struct Product prod) //  The method does not return any
 // ----- ----- -----
 // Create shop
 // Reading data from a file line by line and converts into a variables (shop cash and stock).
-struct Shop createAndStockShop() // This creates a struct of 'Shop' type and its actual instance is a results (return) of the function createAndStockShop().
+struct Shop createAndStockShop() // This creates a struct of 'Shop' type and its actual instance is a results (return) of the function
 {
   // Reading file script is based on https://stackoverflow.com/a/3501681
   FILE *fp;
@@ -225,7 +225,7 @@ void printShop(struct Shop *sh)
 // The method takes "struct Shop" as a parameter; it does not return anything.
 {
   // Show shop detials
-  printf("Shop has €%.2f in cash\n", sh->cash);
+  printf("\nShop has €%.2f in cash\n", sh->cash);
   printf("==== ==== ====\n");
 
   // loop through the items and show the associated details (name, price, quantity)
@@ -241,7 +241,7 @@ void printShop(struct Shop *sh)
 // Show customers details
 double print_customers_details(struct Customer *cust, struct Shop *sh) // returns total cost
 {
-  printf("Customer Name: %s, budget: €%.2f \n", cust->name, cust->budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
+  printf("\nCustomer Name: %s, budget: €%.2f \n", cust->name, cust->budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
   printf("---- ---- ----\n");
 
   // initialise auxiliary variables
@@ -250,13 +250,13 @@ double print_customers_details(struct Customer *cust, struct Shop *sh) // return
   //int customer_wants = cust.shoppingList[0].quantity;
 
   //show customer's shopping list
-  printf("Customer wants following products: \n");
+  printf("%s wants the following products: \n", cust->name);
 
   //loop over the items in the customer shopping list
   for (int i = 0; i < cust->index; i++) // Iteration of from i=0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
   {
     // Show customers details
-    printf("\t %s, quantity %d. ", cust->shoppingList[i].product, cust->shoppingList[i].quantity); // example of chain-accessing the data in the nested stucts
+    printf(" -%s, quantity %d. ", cust->shoppingList[i].product, cust->shoppingList[i].quantity); // example of chain-accessing the data in the nested stucts
 
     // initialise auxiliary variable
     double sub_total = 0; // sub total cost for items from the shopping list
@@ -279,7 +279,7 @@ double print_customers_details(struct Customer *cust, struct Shop *sh) // return
         // check if there is enought of the products in the shop stock
         if (cust->shoppingList[i].quantity <= sh->stock[j].quantity) // sufficient amount of the product in the shop stock
         {
-          printf("\tShop has enough of the product and "); // Prints out cost of all items of the product
+          printf("\tThere is enough of the product and "); // Prints out cost of all items of the product
 
           // perform the cost of the i-th item from the customer's shopping list (full order for the item is done)
           double sub_total_full = cust->shoppingList[i].quantity * sh->stock[j].product.price; // qty*price
@@ -294,7 +294,7 @@ double print_customers_details(struct Customer *cust, struct Shop *sh) // return
 
           // perform the cost of the i-th item from the customer's shopping list
           double sub_total_partial = partial_order_qty * sh->stock[j].product.price;                                                          // partial qty * price
-          printf("\tHovever only %d is available and sub-total cost for that many would be €%.2f. \n", partial_order_qty, sub_total_partial); // Prints out cost of all items of the product
+          printf("\tHowever only %d is available and sub-total cost for that many would be €%.2f. \n", partial_order_qty, sub_total_partial); // Prints out cost of all items of the product
           sub_total = sub_total_partial;
         }
         // addition of sub totals
@@ -320,12 +320,14 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
   // Check whether the customer can afford the desired items
   if (cust->budget < *total_cost) // customer is short of money
   {
-    printf("Unfortunately, you do not have enough money for all the desired items. You are short of €%.2f. ", (*total_cost - cust->budget));
+    printf("Unfortunately, the customer does not have enough money for all the desired items - short of €%.2f. ", (*total_cost - cust->budget));
     printf("Shopping aborted. Come back with more money or negotiate your shopping list.\n");
   }
 
   else // customer has enough money
   {
+    printf("\nProcessing...\n");
+
     //loop over the items in the customer shopping list
     for (int i = 0; i < cust->index; i++) // Iteration of from i=0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
     {
@@ -347,7 +349,7 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
           {
             // update the shop stock (full order)
             sh->stock[j].quantity = sh->stock[j].quantity - cust->shoppingList[i].quantity;
-            printf("Shop updated stock after shopping: %d. \n", sh->stock[j].quantity);
+            printf("Stock quantity of %s updated to: %d \n", cust->shoppingList[i].product.name, sh->stock[j].quantity);
           }
 
           else // customer wants more than in stock
@@ -376,8 +378,12 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
     // update the cash in shop
     sh->cash = sh->cash + *total_cost;
 
-    printf("After shopping the shop will have €%.2f in cash. ", sh->cash);
-    printf("After shopping %s's remaining money will be €%.2f. \n", cust->name, (cust->budget - *total_cost));
+    // update the customer's money
+    cust->budget = (cust->budget - *total_cost);
+
+    printf("Shop has now €%.2f in cash. ", sh->cash);
+    // printf("%s's remaining money is €%.2f. \n", cust->name, cust->budget); //updated customer's budget
+    printf("\n");
   };
 
   return;
@@ -399,6 +405,7 @@ void shop_menu(struct Shop sh)
   do
   {
     printf("\n");
+    printf("***************\n");
     printf("Shop Main Menu:\n");
     printf("***************\n");
     printf("1. Shop status\n");
@@ -409,6 +416,7 @@ void shop_menu(struct Shop sh)
     // printf("7. Reset shop")
     printf("9. Exit\n");
     printf("NB: The sequence of the customers being processed might affect the initial case of the customers. \n");
+    printf("***************\n");
 
     fflush(stdin); // flushes the input string from any left overs from previous inputs
     scanf("%s", char_choice);
@@ -443,13 +451,31 @@ void shop_menu(struct Shop sh)
     // ----- ----- -----
     // Option 3 - process customer B (insufficient funds case) shopping
     case 3:;
+
       // create customer B struct (insufficient funds case)
+      struct Customer customer_B = create_customer("../customer_insufficient_funds.csv"); // This struct calls the method that will read data from a file.
+
+      // print customer details and shopping list
+      total_cost = print_customers_details(&customer_B, &sh);
+
+      // show customer's shopping list by calling relevant method
+      process_order(&customer_B, &sh, &total_cost);
+
       break;
 
     // ----- ----- -----
     // Option 4 - process customer A (exceeding order case) shopping
     case 4:;
+
       // create customer C struct (exceeding order case)
+      struct Customer customer_C = create_customer("../customer_exceeding_order.csv"); // This struct calls the method that will read data from a file.
+
+      // print customer details and shopping list
+      total_cost = print_customers_details(&customer_C, &sh);
+
+      // show customer's shopping list by calling relevant method
+      process_order(&customer_C, &sh, &total_cost);
+
       break;
 
     case 5:
@@ -474,6 +500,7 @@ void shop_menu(struct Shop sh)
 int main()
 {
 
+  // create shop
   struct Shop shop_one = createAndStockShop(); // This struct calls the method that will read data from a file.
 
   shop_menu(shop_one); // calls the method that displays the shop menu
