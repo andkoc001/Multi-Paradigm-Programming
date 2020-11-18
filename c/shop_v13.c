@@ -1,4 +1,4 @@
-// Shop simulator in C v09
+// Shop simulator in C v13
 // Author: Andrzej Kocielski
 // Multi-Paradigm Programming, GMIT 2020
 // Lecturer: dr Dominic Carr
@@ -391,14 +391,16 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
 
 // ----- ----- -----
 // interactive (live) mode
-void interactive_mode(struct Shop sh, double *budget)
+void interactive_mode(struct Shop *sh, double *budget)
 {
   fflush(stdin); // flushes the input string from any left overs from previous inputs
+
+  // printf("Budget: %.2f\n", (*budget)); // for testing - ok
 
   // print shops stock
   printf("The following products are available in shop:\n");
 
-  printShop(&sh);
+  printShop(&(*sh));
 
   // declare required variables
   char product_name[100];
@@ -409,13 +411,86 @@ void interactive_mode(struct Shop sh, double *budget)
 
   printf("\nEnter desired product name: ");
   scanf("%s", product_name);
+  //printf("Budget: %.2f, product: %s\n", (*budget), product_name); // for testing - ok
 
-  printf("\nEnter desired quantity: ");
-  scanf("%d", &quantity);
+  //printf("Product price1: %.2f\n", **sh->stock->product.price); // for testing
+  printf("test2: %d\n", *sh->index); // for testing
+  //printf("test3: %f\n", *sh->index[2]);                        // for testing
+  //printf("test4: %d\n", **sh->stock->quantity); // for testing
 
-  // check if sufficient quantity in stock
+  // check whether the product from customer's shopping list is matches with the shop stock list of products
+  int match_exist = 0; // initialy set to zero, assuming there is no match
 
-  // check if sufficient budget
+  //
+  //
+  //
+  //
+  /*
+
+  // Iterate through shop stock list to match items from customer's shopping list
+  for (int j = 0; j < sh->index; j++)
+  {
+    char *sh_item_name = sh->stock[j].product.name; // assign the j-th product from the shop stock list as a shorthand
+
+    if (strcmp(product_name, sh_item_name) == 0) // if true, both product names are identical
+    {
+      match_exist++; // set to one,  meaning there is a matach
+
+      printf("\nEnter desired quantity: ");
+      scanf("%d", &quantity);
+      printf("qty: %d\n", quantity); // for testing only
+    }
+    //
+    //
+    //
+    /*
+
+      //check products availability
+      if (quantity <= sh->stock[j].quantity) // sufficient amount of the product in the shop stock
+      {
+        // check product price and calculate sub-total cost (price*qty)
+        sub_total = sh->stock[j].product.price * quantity;
+
+        // update customer's budget
+        budget = budget - sub_total;
+
+        // update the shop stock (full order)
+        sh->stock[j].quantity = sh->stock[j].quantity - quantity;
+        printf("Bought! Sub-total cost was be €%.2f. Stock quantity of %s updated to: %d \n", product_name, sh->stock[j].quantity);
+
+        //
+        //
+        // printf("€%.2f has been deducted from your wallet. Your budget is now €.2f.", aaaaa, bbbbb); //////////
+        //
+        //
+      }
+
+      else // customer wants more than in stock
+      {
+        // check how many is can be bought
+        int partial_order_qty = quantity - (quantity - sh->stock[j].quantity); // will buy all that is in stock
+
+        // perform the cost of the i-th item from the customer's shopping list
+        double sub_total_partial = partial_order_qty * sh->stock[j].product.price;                                                   // partial qty * price
+        printf("\tOnly %d is available and that many bought. Sub-total cost will be €%.2f. ", partial_order_qty, sub_total_partial); // Prints out cost of all items of the product
+
+        // update the shop stock (partial order)
+        sh->stock[j].quantity = sh->stock[j].quantity - partial_order_qty;
+
+        printf("Nothing left in shop (stock: %d). \n", sh->stock[j].quantity);
+      }
+
+
+    //
+    //
+    //
+
+    else // product not available in stock
+    {
+      printf("Product not found in shop. \n");
+    }
+  }
+*/
 
   return;
 }
@@ -518,7 +593,7 @@ void shop_menu(struct Shop sh)
       int euro; // declare the variable
       scanf("%d", &euro);
       double budget = euro; // change to float number
-      interactive_mode(sh, &budget);
+      interactive_mode(&sh, &budget);
 
       break;
 
