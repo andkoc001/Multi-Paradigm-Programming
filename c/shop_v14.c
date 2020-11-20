@@ -393,7 +393,7 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
 // interactive (live) mode
 void interactive_mode(struct Shop *sh, double *budget)
 {
-  fflush(stdin); // flushes the input string from any left overs from previous inputs
+  //fflush(stdin); // flushes the input string from any left overs from previous inputs
 
   // printf("Budget: %.2f\n", (*budget)); // for testing - ok
 
@@ -404,13 +404,15 @@ void interactive_mode(struct Shop *sh, double *budget)
 
   // declare required variables
   char product_name[100];
-  //int product_number[100];
   int quantity;
 
   // get required data from user's input
-
   printf("\nEnter desired product name: ");
-  scanf("%s", product_name);
+
+  fgets(product_name, sizeof product_name, stdin);
+  scanf("%[^\n]%*c", product_name);
+
+  printf("Searching for: \"%s\"\n", product_name);
 
   // printf("Test 2: Customer budget: %.2f, product: %s\n", (*budget), product_name); // for testing - ok
   // printf("Test 3: Cash in shop: %f\n", *(&sh->cash));                        // for testing - ok
@@ -465,10 +467,6 @@ void interactive_mode(struct Shop *sh, double *budget)
           printf("Unfortunately, you do not have enough money for all the desired items - short of €%.2f. ", (sub_total - *budget));
           printf("Shopping aborted. Come back with more money or reduce the quantity.\n");
         }
-
-        //
-        //
-        //
       }
 
       else // customer wants more than in stock
@@ -497,7 +495,7 @@ void interactive_mode(struct Shop *sh, double *budget)
     printf("Product not found in shop. \n");
   }
 
-  return;
+  //;
 }
 
 // ===== ===== ===== ===== ===== =====
@@ -602,7 +600,7 @@ void shop_menu(struct Shop sh)
 
       break;
 
-    case 9:
+    case 9:;
       // exit
       break;
 
