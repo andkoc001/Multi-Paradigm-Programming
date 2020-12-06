@@ -1,4 +1,4 @@
-// Shop simulator in C v15
+// Shop simulator in C v16
 // Author: Andrzej Kocielski
 // Multi-Paradigm Programming, GMIT 2020
 // Lecturer: dr Dominic Carr
@@ -25,21 +25,21 @@ struct Product
 };
 
 // ----- ----- ----- ----- -----
-// This struct defines the stock of a product and its available quantity. Note it consists of another struct object, nested inside. This struct is used to show the stock both shop and customers.
+// This struct defines the blueprint for products offered in the shop. It consists of two variables, defined inside the struct.
 // ----- ----- ----- ----- -----
 struct ProductStock
 {
   struct Product product; // cross reference to 'Product' struct; struct type.
-  int quantity;           // quantity of the product available in the shop/customer stok.
+  int quantity;           // quantity of the product available in the shop stock.
 };
 
 // ----- ----- ----- ----- -----
-// This struct defines the stock of a product and its available quantity. Note it consists of another struct object, nested inside. This struct is used to show the stock both shop and customers.
+//  This struct is used to show the stock both shop and customers.
 // ----- ----- ----- ----- -----
 struct ProductQuantity
 {
   struct Product product; // cross reference to 'Product' struct; struct type.
-  int quantity;           // quantity of the product available in the shop/customer stok.
+  int quantity;           // quantity of the product available by the shop/customer.
 };
 
 // ----- ----- ----- ----- -----
@@ -64,7 +64,7 @@ struct Customer
 };
 
 // ===== ===== ===== ===== ===== =====
-// Definition of methods
+// Definition of functions
 // ===== ===== ===== ===== ===== =====
 
 // Terminology reminder: In C functions exchange information by means of parameters and arguments. The term parameter refers to any declaration within the parentheses following the function name in a function declaration or definition; the term argument refers to any expression within the parentheses of a function call. (Source: https://www.cs.auckland.ac.nz/references/unix/digital/AQTLTBTE/DOCU_056.HTM)

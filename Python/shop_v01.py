@@ -1,31 +1,72 @@
+# Shop simulator in Python procedural v01
+# Author: Andrzej Kocielski
+# Multi-Paradigm Programming, GMIT 2020
+# Lecturer: dr Dominic Carr
+
+'''
+# ===== ===== ===== ===== ===== =====
+# Importing external libraries
+# ===== ===== ===== ===== ===== =====
+'''
+
 from dataclasses import dataclass, field
 from typing import List
 import csv
 
+'''
+# ===== ===== ===== ===== ===== =====
+# Definiton of dataclasses
+# ===== ===== ===== ===== ===== =====
+'''
+
+
 @dataclass
+# This dataclass defines the data structure (blueprint) for products offered in the shop. It consists of two variables, defined inside.
 class Product:
     name: str
     price: float = 0.0
 
-@dataclass 
+
+@dataclass
+# This dataclass defines the blueprint for products offered in the shop.
 class ProductStock:
+    # dataclass Product, defined above (i.e. nested dataclasses)
     product: Product
     quantity: int
 
-@dataclass 
+
+@dataclass
+# This dataclass is used to show the stock both shop and customer.
+class ProductQuantity:
+    product: Product  # nested dataclasses
+    quantity: int
+
+
+@dataclass
+# This dataclass defines the shop entity. Consist of the nested dataclass.
 class Shop:
     cash: float = 0.0
     stock: List[ProductStock] = field(default_factory=list)
 
+
 @dataclass
+# Defines the customer blueprint.
 class Customer:
     name: str = ""
     budget: float = 0.0
     shopping_list: List[ProductStock] = field(default_factory=list)
 
+
+'''
+# ===== ===== ===== ===== ===== =====
+# Definition of functions
+# ===== ===== ===== ===== ===== =====
+'''
+
+
 def create_and_stock_shop():
     s = Shop()
-    with open('../stock.csv') as csv_file:
+    with open('../Data/shop_stock.csv') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         first_row = next(csv_reader)
         s.cash = float(first_row[0])
@@ -33,9 +74,10 @@ def create_and_stock_shop():
             p = Product(row[0], float(row[1]))
             ps = ProductStock(p, float(row[2]))
             s.stock.append(ps)
-            #print(ps)
+            # print(ps)
     return s
-    
+
+
 def read_customer(file_path):
     with open(file_path) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
@@ -47,22 +89,24 @@ def read_customer(file_path):
             p = Product(name)
             ps = ProductStock(p, quantity)
             c.shopping_list.append(ps)
-        return c 
-        
+        return c
+
 
 def print_product(p):
     print(f'\nPRODUCT NAME: {p.name} \nPRODUCT PRICE: {p.price}')
 
+
 def print_customer(c):
     print(f'CUSTOMER NAME: {c.name} \nCUSTOMER BUDGET: {c.budget}')
-    
+
     for item in c.shopping_list:
         print_product(item.product)
-        
+
         print(f'{c.name} ORDERS {item.quantity} OF ABOVE PRODUCT')
         cost = item.quantity * item.product.price
         print(f'The cost to {c.name} will be €{cost}')
-        
+
+
 def print_shop(s):
     print(f'Shop has {s.cash} in cash')
     for item in s.stock:
@@ -70,7 +114,8 @@ def print_shop(s):
         print(f'The Shop has {item.quantity} of the above')
 
 #s = create_and_stock_shop()
-#print_shop(s)
+# print_shop(s)
 
-c = read_customer("../customer.csv")
+
+c = read_customer("../Data/customer_good.csv")
 print_customer(c)
