@@ -9,6 +9,7 @@
 # ===== ===== ===== ===== ===== =====
 '''
 
+import os
 from dataclasses import dataclass, field
 from typing import List
 import csv
@@ -119,3 +120,117 @@ def print_shop(s):
 
 c = read_customer("../Data/customer_good.csv")
 print_customer(c)
+
+
+'''
+# ===== ===== ===== ===== ===== =====
+# The shop main menu
+# ===== ===== ===== ===== ===== =====
+'''
+
+
+def display_menu():
+
+    print("")
+    print("=" * 15)
+    print("Shop Main Menu (Python procedural):")
+    print("=" * 15)
+    print("1 - Shop status")
+    print("2 - Customer A - good case")
+    print("3 - Customer B - insufficient funds case")
+    print("4 - View Customer C - exceeding order case")
+    print("5 - Interactive mode")
+    print("9 - Exit application\n")
+    print("NB: The sequence of the customers being processed might affect the initial case of the customers.")
+    print("=" * 15)
+
+
+'''
+# ===== ===== ===== ===== ===== =====
+# The main function - start of the program 
+# ===== ===== ===== ===== ===== =====
+'''
+
+
+def shop_menu(sh):
+    '''
+    Shop menu
+    '''
+
+    # Main menu screen
+    display_menu()
+
+    while True:  # this is a 'forever' loop, unless interupted (break)
+
+        # Request input from the user, assign to variable choice
+        choice = input("Enter your choice: ")
+
+        if (choice == "1"):
+            print("inside option 1\n")
+            # printShop()
+            display_menu()
+
+        elif (choice == "2"):
+            print("inside option 2\n")
+            # get_countries_by_ind_year()
+            display_menu()
+
+        elif (choice == "3"):
+            print("inside option 3\n")
+            # add_new_person()
+            display_menu()
+
+        elif (choice == "4"):
+            print("inside option 4\n")
+            # view_countries_by_name()
+            display_menu()
+
+        elif (choice == "5"):
+            print("inside option 5\n")
+            # view_countries_by_population()
+            display_menu()
+
+        elif (choice == "9"):  # Exit condition
+            print("")
+            break
+
+        else:
+            display_menu()
+
+
+'''
+# ===== ===== ===== ===== ===== =====
+# The main function - start of the program 
+# ===== ===== ===== ===== ===== =====
+'''
+
+
+def main():
+    '''
+    This is the main function the program. It defines a starting point and controls all other functionality of the program. It is called automatically at the program start.
+    '''
+
+    # Clear screen
+    os.system("cls")   # for Windows systems
+    os.system("clear")  # for Linux systems
+
+    print("\n\n>>> Multi-Paradigm Programming Project by Andrzej Kocielski, 2020 <<<")
+
+    '''
+    Create shop only once, upon the program start
+    '''
+    shop_one = create_and_stock_shop()  # assign data from a file to variable shop_one.
+    # print(shop_one) # for testing - ok
+
+    shop_menu(shop_one)  # calls function that displays the shop menu
+
+
+'''
+# ===== ===== ===== ===== ===== =====
+# Check dependencies
+# ===== ===== ===== ===== ===== =====
+'''
+
+if __name__ == "__main__":
+    # execute only if run as a script
+    main()
