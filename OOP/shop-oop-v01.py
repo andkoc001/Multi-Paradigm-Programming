@@ -1,4 +1,27 @@
+# Shop simulator in Python OOP v01
+# Author: Andrzej Kocielski
+# Multi-Paradigm Programming, GMIT 2020
+# Lecturer: dr Dominic Carr
+
+
+'''
+# ===== ===== ===== ===== ===== =====
+# Importing external libraries
+# ===== ===== ===== ===== ===== =====
+'''
+
+import os
 import csv
+
+'''
+# ===== ===== ===== ===== ===== =====
+# Definiton of classes
+# ===== ===== ===== ===== ===== =====
+'''
+
+# ----- ----- ----- ----- -----
+# Product class
+# ----- ----- ----- ----- -----
 
 
 class Product:
@@ -9,6 +32,10 @@ class Product:
 
     def __repr__(self):
         return f'NAME: {self.name} PRICE: {self.price:.2f}'
+
+# ----- ----- ----- ----- -----
+# ProductStock class
+# ----- ----- ----- ----- -----
 
 
 class ProductStock:
@@ -28,6 +55,10 @@ class ProductStock:
 
     def __repr__(self):
         return f"{self.product} QUANTITY: {self.quantity:.0f}"
+
+# ----- ----- ----- ----- -----
+# Customer class
+# ----- ----- ----- ----- -----
 
 
 class Customer:
@@ -74,6 +105,10 @@ class Customer:
         str += f"\nThe cost would be: {self.order_cost():.2f}, he would have {self.budget - self.order_cost():.2f} left"
         return str
 
+# ----- ----- ----- ----- -----
+# Shop class
+# ----- ----- ----- ----- -----
+
 
 class Shop:
 
@@ -96,9 +131,47 @@ class Shop:
         return str
 
 
-s = Shop("../shop_stock.csv")
-# print(s)
+'''
+# ===== ===== ===== ===== ===== =====
+# The main function - start of the program
+# ===== ===== ===== ===== ===== =====
+'''
 
-c = Customer("../customer.csv")
-c.calculate_costs(s.stock)
-print(c)
+
+def main():
+    '''
+    This is the main function the program. It defines a starting point and controls all other functionality of the program. It is called automatically at the program start.
+    '''
+
+    # Clear screen
+    os.system("cls")   # for Windows systems
+    os.system("clear")  # for Linux systems
+
+    print("\n\n>>> Multi-Paradigm Programming Project by Andrzej Kocielski, 2020 <<<")
+
+    s = Shop("../Data/shop_stock.csv")
+    # print(s)
+
+    # deafault customer, provided with the box
+    c = Customer("../Data/customer.csv")
+    c.calculate_costs(s.stock)
+    print(c)
+
+    '''
+    # Create shop only once, upon the program start
+    shop_one = create_and_stock_shop()  # assign data from a file to variable shop_one.
+    # print(shop_one) # for testing - ok
+
+    shop_menu(shop_one)  # calls function that displays the shop menu
+    '''
+
+
+'''
+# ===== ===== ===== ===== ===== =====
+# Check dependencies
+# ===== ===== ===== ===== ===== =====
+'''
+
+if __name__ == "__main__":
+    # execute only if run as a script
+    main()
