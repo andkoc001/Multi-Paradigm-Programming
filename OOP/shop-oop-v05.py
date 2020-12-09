@@ -212,7 +212,7 @@ class Customer:
                     f"\tThis product is not available. Sub-total cost will be €{sub_total:.2f}.")
 
         print(
-            f"Total shopping cost would be (customer budget not yet verified): €{self.total_cost:.2f}. \n")
+            f"Total shopping cost would be: €{self.total_cost:.2f}. \n")
 
         # for testing - OK
         # print(f"\nThe following items will be purchased: ", end="")
@@ -268,14 +268,17 @@ class Shop:
             print(
                 f"Unfortunately, the customer does not have enough money for all the desired items - short of €{(total_cost - cust.budget):.2f}. ", end="")
             print(
-                f"Shopping aborted. Come back with more money or negotiate your shopping list.")
+                f"Shopping aborted. Come back with more money or negotiate your shopping list. \n")
         else:  # customer has enough money
             print(f"Processing...")
 
-    '''
+            # for testing - OK
+            # print(f"\nThe following items will be purchased: ")
+            # for item in cust.total_order_list:
+            #     print(f"{item.product.name}, qty: {int(item.quantity)}; ", end="")
+            # print("\n")
 
             # loop over the items in the customer shopping list
-            # Iteration of from i = 0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
             for cust_item in cust.shopping_list:
                 # check whether the product from customer's shopping list is matches with the shop stock list of products
                 match_exist = 0  # initialy set to zero, assuming there is no match
@@ -283,7 +286,7 @@ class Shop:
                 # assign the i-th product from the customer schopping list as a shorthand
                 cust_item_name = cust_item.product.name
 
-                # Iterate through shop stock list to match items from customer's shopping list
+                # Iterate through shop stock list to match items from customer's order list
                 for sh_item in sh.stock:
                     # assign the j-th product from the shop stock list as a shorthand
                     sh_item_name = sh_item.product.name
@@ -321,7 +324,8 @@ class Shop:
 
                 # if customer wants a product that is not in the shop
                 if (match_exist == 0):  # there is no match of product
-                    print(f"\tThis product not available. Sub-total cost will be €0.00.")
+                    print(
+                        f"\tThis product not available. Sub-total cost will be €0.00.")
 
             # update the cash in shop
             sh.cash = sh.cash + total_cost
@@ -332,8 +336,7 @@ class Shop:
             print(f"Shop has now €{sh.cash:.2f} in cash. ")
             # updated customer's budget
             print(f"{cust.name}'s remaining money is €{cust.budget:.2f}.")
-            print("\n")
-    '''
+            print("")
 
     # ----- ----- ----- ----- -----
     # The shop menu and main program functions
@@ -372,12 +375,12 @@ class Shop:
                 customer_A = Customer("../Data/customer_good.csv")
                 # print(customer_A) # for testing
 
-                # # print customer details and shopping list
+                # # print customer details and evaluate shopping list
                 customer_A.evaluate_order(self)
 
                 # total_cost = evaluate_order(customer_A, shop)
 
-                # # show customer's shopping list by calling relevant method
+                # # process customer's shopping list by calling relevant method
                 self.process_order(customer_A, self,
                                    customer_A.total_cost, customer_A.total_order_list)
 
@@ -388,10 +391,10 @@ class Shop:
                 customer_B = Customer(
                     "../Data/customer_insufficient_funds.csv")
 
-                # # print customer details and shopping list
+                # # print customer details and evaluate shopping list
                 customer_B.evaluate_order(self)
 
-                # # show customer's shopping list by calling relevant method
+                # # process customer's shopping list by calling relevant method
                 self.process_order(customer_B, self,
                                    customer_B.total_cost, customer_B.total_order_list)
 
@@ -401,10 +404,10 @@ class Shop:
                 # read data from a file
                 customer_C = Customer("../Data/customer_exceeding_order.csv")
 
-                # # print customer details and shopping list
+                # # print customer details and evaluate shopping list
                 customer_C.evaluate_order(self)
 
-                # # show customer's shopping list by calling relevant method
+                # # process customer's shopping list by calling relevant method
                 self.process_order(customer_C, self,
                                    customer_C.total_cost, customer_C.total_order_list)
 
@@ -463,8 +466,8 @@ def main():
     '''
 
     # Clear screen
-    # os.system("cls")   # for Windows systems
-    # os.system("clear")  # for Linux systems
+    os.system("cls")   # for Windows systems
+    os.system("clear")  # for Linux systems
 
     print("\n\n>>> Multi-Paradigm Programming Project by Andrzej Kocielski, 2020 <<<")
 
