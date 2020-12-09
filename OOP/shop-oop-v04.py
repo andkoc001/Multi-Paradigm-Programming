@@ -24,6 +24,7 @@ import csv
 # Product class
 # ----- ----- ----- ----- -----
 
+
 class Product:
 
     def __init__(self, name, price=0):
@@ -112,44 +113,86 @@ class Customer:
         print(f"Customer name: {self.name}, budget: €{self.budget}")
         print("**** **** ****")
 
+        print(f"{self.name} wants the following products: ")
+
+        # initialise auxiliary variable
         total_cost = 0
 
-        print(f"{self.name} wants the following products: ")
         # loop over the items in customer shopping list
         for cust_item in self.shopping_list:
             # print(f"{cust_item.product.name} ORDERS {cust_item.quantity} ")  # for testing - ok
 
-            # loop shop stock
-            for shop_item in sh.stock:
-
-                if (cust_item.name() == shop_item.name()):  # the product is in stock
-                    cust_item.product.price = shop_item.unit_price()
-
-                    sub_total = cust_item.quantity * cust_item.product.price
-                    total_cost = + sub_total
-                    print(
-                        f" -{cust_item.product.name}, quantity {cust_item.quantity:.0f}. ", end="")
-                    print(
-                        f"\t OK, there is enough of the product and sub-total would be €{sub_total}")
-                else:
-                    print(
-                        f" -{cust_item.product.name}, quantity {cust_item.quantity:.0f}. ", end="")
-                    print("\t -->>not in stock, aaaa")
-                    pass
-
-            # self.get_costs(sh.stock)
+            # Show customers details (example of chain-accessing the data in the nested dataclasses)
+            print(
+                f" -{cust_item.product.name}, quantity {cust_item.quantity:.0f}. ", end="")
 
             # initialise auxiliary variable
             sub_total = 0  # sub total cost for items from the shopping list
+            # control the messages about the customer
+            customer_stock_state = 0  # stock check - assume item not available
 
-            # Calculating sub-total cost of all items of the i-th product in customer's shopping list.
+            # loop shop stock
+            for shop_item in sh.stock:
 
-            # check whether the product from customer's shopping list is matches with the shop stock list of products
-            match_exist = 0  # initialy set to zero, assuming there is no match
-            # assign the i-th product from the customer schopping list as a shorthand
-            cust_item_name = cust_item.product.name
+                # check if match exists (the product is in stock)
+                if (cust_item.name() == shop_item.name()) and (cust_item.quantity <= shop_item.quantity):
 
-        return 1111
+                    # get the product price form shop
+                    cust_item.product.price = shop_item.unit_price()
+                    sub_total_full = cust_item.quantity * cust_item.product.price  # qty*price
+
+                    # update total cost with the current item
+                    sub_total = + sub_total_full
+
+                    # adjust the controller about the customer state
+                    customer_stock_state = 1  # stock check - all quantity can satisfied
+
+                # customer wants more than in stock
+                elif (cust_item.name() == shop_item.name()) and (cust_item.quantity > shop_item.quantity):
+
+                    # check how many can be bought
+                    partial_order_qty = cust_item.quantity - \
+                        (cust_item.quantity -
+                         shop_item.quantity)  # will buy all that is in stock
+
+                    # perform the cost of the i-th item from the customer's shopping list
+                    sub_total_partial = partial_order_qty * \
+                        shop_item.product.price  # partial qty * price
+
+                    # update total cost with the current item
+                    sub_total = + sub_total_partial
+
+                    # Prints out cost of all items of the product
+                    customer_stock_state = 2  # stock check - partial quantity can satisfied
+
+                # none in stock
+                elif ((cust_item.name() == shop_item.name()) and (shop_item.quantity <= 0)):
+                    # Prints out cost of all items of the product
+                    customer_stock_state = 0  # stock check - none in stock
+
+                # else:
+                    # customer_stock_state = 0  # stock check - none in stock
+
+            # addition of sub totals
+            total_cost = total_cost + sub_total
+
+            if customer_stock_state == 1:
+                # stock check - all quantity can satisfied
+                print(
+                    f"\tOK, there is enough of the product and sub-total would be €{sub_total_full:.2f}")
+            elif customer_stock_state == 2:
+                # stock check - partial quantity can satisfied
+                print(
+                    f"\tHowever only {partial_order_qty:.0f} is available and sub-total cost for that many would be €{sub_total_partial:.2f}.")
+            elif customer_stock_state == 0:
+                # stock check - item not available
+                print(
+                    f"\tThis product is not available. Sub-total cost will be €{sub_total:.2f}.")
+
+        print(
+            f"Total shopping cost would be (customer budget not yet verified): €{total_cost:.2f}.")
+
+        # return total_cost
 
     def __repr__(self):
 
@@ -233,7 +276,7 @@ class Shop:
                 # print("    in display_menu option 2 ")  # for testing - ok
 
                 # # create customer A struct (good case) from file
-                customer_A = Customer("../Data/customer_good.csv")
+                customer_A = Customer("../Data/customer.csv")
                 # print(customer_A) # for testing
                 print(customer_A.print_customers_details(self))
                 # customer_A = create_customer("../Data/customer_good.csv")  # read data from a file
