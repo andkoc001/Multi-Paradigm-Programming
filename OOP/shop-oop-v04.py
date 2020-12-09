@@ -192,7 +192,7 @@ class Customer:
         print(
             f"Total shopping cost would be (customer budget not yet verified): €{total_cost:.2f}.")
 
-        # return total_cost
+        total_cost
 
     def __repr__(self):
 
@@ -276,12 +276,12 @@ class Shop:
                 # print("    in display_menu option 2 ")  # for testing - ok
 
                 # # create customer A struct (good case) from file
-                customer_A = Customer("../Data/customer.csv")
+                customer_A = Customer("../Data/customer_good.csv")
                 # print(customer_A) # for testing
-                print(customer_A.print_customers_details(self))
-                # customer_A = create_customer("../Data/customer_good.csv")  # read data from a file
 
                 # # print customer details and shopping list
+                customer_A.print_customers_details(self)
+
                 # total_cost = print_customers_details(customer_A, shop)
 
                 # # show customer's shopping list by calling relevant method
@@ -291,11 +291,13 @@ class Shop:
 
             elif (choice == "3"):
                 print("    in display_menu option 3 ")  # for testing - ok
-                # # create customer B struct (good case)
-                # customer_B = create_customer("../Data/customer_insufficient_funds.csv")  # read data from a file
+                # create customer B struct (good case)
+                # read data from a file
+                customer_B = Customer(
+                    "../Data/customer_insufficient_funds.csv")
 
                 # # print customer details and shopping list
-                # total_cost = print_customers_details(customer_B, shop)
+                customer_B.print_customers_details(self)
 
                 # # show customer's shopping list by calling relevant method
                 # process_order(customer_B, shop, total_cost)
@@ -305,10 +307,11 @@ class Shop:
             elif (choice == "4"):
                 print("    in display_menu option 4 ")  # for testing - ok
                 # # create customer C struct (good case)
-                # customer_C = create_customer("../Data/customer_exceeding_order.csv")  # read data from a file
+                # read data from a file
+                customer_C = Customer("../Data/customer_exceeding_order.csv")
 
                 # # print customer details and shopping list
-                # total_cost = print_customers_details(customer_C, shop)
+                customer_C.print_customers_details(self)
 
                 # # show customer's shopping list by calling relevant method
                 # process_order(customer_C, shop, total_cost)
