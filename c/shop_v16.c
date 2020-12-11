@@ -1,5 +1,6 @@
 // Shop simulator in C v16
 // Author: Andrzej Kocielski
+// GitHub: https: //github.com/andkoc001/Multi-Paradigm-Programming/
 // Multi-Paradigm Programming, GMIT 2020
 // Lecturer: dr Dominic Carr
 
@@ -251,11 +252,11 @@ void printShop(struct Shop *sh)
 // ----- ----- ----- ----- -----
 double print_customers_details(struct Customer *cust, struct Shop *sh) // returns total cost
 {
-  printf("\nCustomer Name: %s, budget: €%.2f \n", cust->name, cust->budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
+  printf("\nCustomer name: %s, budget: €%.2f \n", cust->name, cust->budget); // Values of cust.name and cust.budget are referring to customer's details defined the strut instance (within 'Main' method).
   printf("---- ---- ----\n");
 
   // initialise auxiliary variables
-  double total_cost = 0;
+  double total_cost = 0.0;
 
   //int customer_wants = cust.shoppingList[0].quantity;
 
@@ -289,7 +290,7 @@ double print_customers_details(struct Customer *cust, struct Shop *sh) // return
         // check if there is enought of the products in the shop stock
         if (cust->shoppingList[i].quantity <= sh->stock[j].quantity) // sufficient amount of the product in the shop stock
         {
-          printf("\tThere is enough of the product and "); // Prints out cost of all items of the product
+          printf("\tOK, there is enough in stock and "); // Prints out cost of all items of the product
 
           // perform the cost of the i-th item from the customer's shopping list (full order for the item is done)
           double sub_total_full = cust->shoppingList[i].quantity * sh->stock[j].product.price; // qty*price
@@ -317,7 +318,7 @@ double print_customers_details(struct Customer *cust, struct Shop *sh) // return
       printf("\tThis product not available. Sub-total cost will be €%.2f. \n", sub_total); // Prints out cost of all items of the product
     }
   }
-  printf("\nTotal cost would be €%.2f. \n", total_cost); // Prints out cost of all items of the product
+  printf("\nTotal shopping cost would be €%.2f. \n\n", total_cost); // Prints out cost of all items of the product
 
   return total_cost;
 }
@@ -332,12 +333,12 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
   if (cust->budget < *total_cost) // customer is short of money
   {
     printf("Unfortunately, the customer does not have enough money for all the desired items - short of €%.2f. ", (*total_cost - cust->budget));
-    printf("Shopping aborted. Come back with more money or negotiate your shopping list.\n");
+    printf("Shopping aborted. Come back with more money or negotiate your shopping list.\n\n");
   }
 
   else // customer has enough money
   {
-    printf("\nProcessing...\n");
+    printf("Processing...\n");
 
     //loop over the items in the customer shopping list
     for (int i = 0; i < cust->index; i++) // Iteration of from i=0, increasing by 1, through all the items the customer has. Variable 'index' (defined in the struct) by defult starts with value 0 (zero)
@@ -369,13 +370,13 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
             int partial_order_qty = cust->shoppingList[i].quantity - (cust->shoppingList[i].quantity - sh->stock[j].quantity); // will buy all that is in stock
 
             // perform the cost of the i-th item from the customer's shopping list
-            double sub_total_partial = partial_order_qty * sh->stock[j].product.price;                                                                                                // partial qty * price
-            printf("Only quqntity %d of %s is available and that many bought. Sub-total cost was €%.2f. ", partial_order_qty, cust->shoppingList[i].product.name, sub_total_partial); // Prints out cost of all items of the product
+            double sub_total_partial = partial_order_qty * sh->stock[j].product.price; // partial qty * price
+            // printf("Only quantity %d of %s is available and that many bought. Sub-total cost was €%.2f. ", partial_order_qty, cust->shoppingList[i].product.name, sub_total_partial); // Prints out cost of all items of the product
 
             // update the shop stock (partial order)
             sh->stock[j].quantity = sh->stock[j].quantity - partial_order_qty;
 
-            printf("Stock updated to %d (nothing left in shop). \n", sh->stock[j].quantity);
+            printf("Stock quantity of %s updated to %d. \n", cust->shoppingList[i].product.name, sh->stock[j].quantity);
           }
         }
       }
@@ -392,8 +393,9 @@ void process_order(struct Customer *cust, struct Shop *sh, double *total_cost)
     // update the customer's money
     cust->budget = (cust->budget - *total_cost);
 
-    printf("Shop has now €%.2f in cash. ", sh->cash);
+    printf("\nShop has now €%.2f in cash. \n", sh->cash);
     // printf("%s's remaining money is €%.2f. \n", cust->name, cust->budget); //updated customer's budget
+    printf("%s's remaining money is €%.2f in cash. \n", cust->name, cust->budget);
     printf("\n");
   };
 
@@ -410,7 +412,7 @@ void interactive_mode(struct Shop *sh, double *budget)
   // printf("Budget: %.2f\n", (*budget)); // for testing - ok
 
   // print shops stock
-  printf("The following products are available in shop:\n");
+  printf("\nThe following products are available in shop:\n");
 
   printShop(&(*sh));
 
@@ -428,7 +430,7 @@ void interactive_mode(struct Shop *sh, double *budget)
     fgets(product_name, sizeof product_name, stdin);
     scanf("%[^\n]%*c", product_name);
 
-    printf("Searching for: \"%s\"\n", product_name);
+    printf("Searching for: \"%s\"", product_name);
 
     // printf("Test 2: Customer budget: %.2f, product: %s\n", (*budget), product_name); // for testing - ok
     // printf("Test 3: Cash in shop: %f\n", *(&sh->cash));                        // for testing - ok
@@ -526,21 +528,25 @@ void shop_menu(struct Shop sh)
 
   system("cls");   // for Windows systems
   system("clear"); // for Linux systems
+  printf("\n\n>>> Multi-Paradigm Programming Project by Andrzej Kocielski, 2020 <<<\n");
+
+  char separator[20] = "***************\n";
 
   do
   {
     printf("\n");
-    printf("***************\n");
-    printf("Shop Main Menu:\n");
-    printf("***************\n");
+    printf(separator);
+    printf("Shop Main Menu (C language):\n");
+    printf(separator);
     printf("1. Shop status\n");
     printf("2. Customer A - good case\n");
     printf("3. Customer B - insufficient funds case\n");
     printf("4. Customer C - exceeding order case\n");
     printf("5. Interactive mode\n");
-    printf("9. Exit\n");
+    printf("9. Exit application\n\n");
     printf("NB: The sequence of the customers being processed might affect the initial case of the customers. \n");
-    printf("***************\n");
+    printf(separator);
+    printf("Enter your choice: ");
 
     fflush(stdin); // flushes the input string from any left overs from previous inputs
     scanf("%s", char_choice);
@@ -608,14 +614,14 @@ void shop_menu(struct Shop sh)
 
     case 5:;
       // Welcoming message
-      printf("Interactive shopping mode\n");
+      printf("\nInteractive shopping mode\n");
       printf("-------------------------\n");
 
       // get user's name
       printf("What's your name, good customer?: ");
       char *customer_name = malloc(sizeof(char) * 50); // declare the variable
       scanf("%s", customer_name);
-      printf("Welcome, %s. ", customer_name);
+      printf("Welcome, %s. \n", customer_name);
 
       // get user's budget
       printf("Enter your budget in whole Euros (without cents): ");

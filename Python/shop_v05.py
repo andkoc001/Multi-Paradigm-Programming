@@ -1,5 +1,6 @@
 # Shop simulator in Python procedural v05
 # Author: Andrzej Kocielski
+# GitHub: https://github.com/andkoc001/Multi-Paradigm-Programming/
 # Multi-Paradigm Programming, GMIT 2020
 # Lecturer: dr Dominic Carr
 
@@ -129,7 +130,7 @@ def print_product(prod):
 def print_customers_details(cust, sh):
 
     # Values of cust.name and cust.budget are referring to customer's details defined the dataclass instance (within 'Main' method).
-    print(f"\nCustomer Name: {cust.name}, budget: €{cust.budget:.2f}")
+    print(f"\nCustomer name: {cust.name}, budget: €{cust.budget:.2f}")
     print(f"---- ---- ----")
 
     # initialise auxiliary variables
@@ -172,7 +173,7 @@ def print_customers_details(cust, sh):
                 # sufficient amount of the product in the shop stock
                 if (cust_item.quantity <= sh_item.quantity):
                     # Prints out cost of all items of the product
-                    print(f"\tOK, there is enough of the product and ", end="")
+                    print(f"\tOK, there is enough in stock and ", end="")
 
                     # perform the cost of the i-th item from the customer's shopping list(full order for the item is done)
                     sub_total_full = cust_item.quantity * sh_item.product.price  # qty*price
@@ -204,7 +205,7 @@ def print_customers_details(cust, sh):
                 f"\tThis product is not available. Sub-total cost will be €{sub_total:.2f}.")
 
     # Prints out cost of all items of the product
-    print(f"Total cost would be €{total_cost:.2f}. \n")
+    print(f"\nTotal shopping cost would be €{total_cost:.2f}. \n")
 
     return total_cost
 
@@ -219,7 +220,7 @@ def process_order(cust, sh, total_cost):
         print(
             f"Unfortunately, the customer does not have enough money for all the desired items - short of €{(total_cost - cust.budget):.2f}. ", end="")
         print(
-            f"Shopping aborted. Come back with more money or negotiate your shopping list.")
+            f"Shopping aborted. Come back with more money or negotiate your shopping list.\n")
 
     else:  # customer has enough money
         print(f"Processing...")
@@ -259,15 +260,14 @@ def process_order(cust, sh, total_cost):
                         sub_total_partial = partial_order_qty * \
                             sh_item.product.price  # partial qty * price
 
-                        print(
-                            f"Only quantity {partial_order_qty:.0f} of {cust_item.product.name} is available and that many bought. Sub-total cost was €{sub_total_partial:.2f}. ", end="")
+                        # print(f"Only quantity of {cust_item.product.name} is available and that many bought. Sub-total cost was €{sub_total_partial:.2f}. ", end="")
                         # Prints out cost of all items of the product
 
                         # update the shop stock(partial order)
                         sh_item.quantity = sh_item.quantity - partial_order_qty
 
                         print(
-                            f"Stock updated to {sh_item.quantity:.0f} (nothing left in shop).")
+                            f"Stock quantity of {cust_item.product.name} updated to {sh_item.quantity:.0f}.")
 
             # if customer wants a product that is not in the shop
             if (match_exist == 0):  # there is no match of product
@@ -279,10 +279,10 @@ def process_order(cust, sh, total_cost):
         # update the customer's money
         cust.budget = cust.budget - total_cost
 
-        print(f"Shop has now €{sh.cash:.2f} in cash. ")
+        print(f"\nShop has now €{sh.cash:.2f} in cash. ")
         # updated customer's budget
         print(f"{cust.name}'s remaining money is €{cust.budget:.2f}.")
-        print("\n")
+        print("")
 
     return
 
@@ -295,7 +295,7 @@ def interactive_mode(sh, budget):
     # print(f"Budget: {budget:.2f}")  # for testing - ok
 
     # print shops stock
-    print(f"The following products are available in shop:")
+    print(f"\nThe following products are available in shop:")
     print_shop(sh)
 
     # declare required variables
@@ -308,7 +308,7 @@ def interactive_mode(sh, budget):
 
         print()
         # Request input from the user, assign to the variable
-        product_name = input("Enter desired product name (x to exit): ")
+        product_name = input("\nEnter desired product name (x to exit): ")
 
         # print(f"Test 2: Customer budget: {budget:.2f}, product: {product_name}") # for testing - ok
         # print(f"Test 3: Cash in shop: {sh.cash}") # for testing - ok
@@ -365,7 +365,7 @@ def interactive_mode(sh, budget):
                         print(
                             f"Unfortunately, you do not have enough money for that many - short of €{(sub_total - budget):.2f}. ", end="")
                         print(
-                            f"Shopping aborted. Come back with more money or reduce the quantity.\n")
+                            f"Shopping aborted. Come back with more money or reduce the quantity.")
 
                 # customer wants more than in stock
                 else:
@@ -416,13 +416,15 @@ def print_shop(sh):  # takes 'shop' dataclass as a parameter
 # The shop main menu
 # ----- ----- ----- ----- -----
 
+separator = "=" * 15
+
 
 def display_menu():
 
     print("")
-    print("=" * 15)
+    print(separator)
     print("Shop Main Menu (Python procedural):")
-    print("=" * 15)
+    print(separator)
     print("1 - Shop status")
     print("2 - Customer A - good case")
     print("3 - Customer B - insufficient funds case")
@@ -430,7 +432,7 @@ def display_menu():
     print("5 - Interactive mode")
     print("9 - Exit application\n")
     print("NB: The sequence of the customers being processed might affect the initial case of the customers.")
-    print("=" * 15)
+    print(separator)
 
 
 # ----- ----- ----- ----- -----
@@ -500,7 +502,7 @@ def shop_menu(shop):
         elif (choice == "5"):
 
             # Welcoming message
-            print("Interactive shopping mode")
+            print("\nInteractive shopping mode")
             print("-------------------------")
 
             # get user's name

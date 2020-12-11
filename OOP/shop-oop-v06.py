@@ -114,8 +114,8 @@ class Customer:
         Shows customers details (budget, shopping list) and calculates total cost of shopping
         '''
         # Show customers details
-        print(f"Customer name: {self.name}, budget: €{self.budget}")
-        print("**** **** ****")
+        print(f"\nCustomer name: {self.name}, budget: €{self.budget:.2f}")
+        print("---- ---- ----")
 
         print(f"{self.name} wants the following products: ")
 
@@ -201,7 +201,7 @@ class Customer:
             if customer_stock_state == 1:
                 # stock check - all quantity can satisfied
                 print(
-                    f"\tOK, there is enough of the product and sub-total would be €{sub_total_full:.2f}")
+                    f"\tOK, there is enough in stock and sub-total cost would be €{sub_total_full:.2f}")
             elif customer_stock_state == 2:
                 # stock check - partial quantity can satisfied
                 print(
@@ -212,7 +212,7 @@ class Customer:
                     f"\tThis product is not available. Sub-total cost will be €{sub_total:.2f}.")
 
         print(
-            f"Total shopping cost would be: €{self.total_cost:.2f}. \n")
+            f"\nTotal shopping cost would be: €{self.total_cost:.2f}. \n")
 
         # for testing - OK
         # print(f"\nThe following items will be purchased: ", end="")
@@ -276,10 +276,10 @@ class Shop:
             # print(f"\nThe following items will be purchased: ")
             # for item in cust.total_order_list:
             #     print(f"{item.product.name}, qty: {int(item.quantity)}; ", end="")
-            # print("\n")
+            # print(f"Product index 0: {cust.total_order_list[0].product.name},\tqty: {cust.total_order_list[0].quantity}")
 
             # loop over the items in the customer shopping list
-            for cust_item in cust.shopping_list:
+            for cust_item in cust.total_order_list:
                 # check whether the product from customer's shopping list is matches with the shop stock list of products
                 match_exist = 0  # initialy set to zero, assuming there is no match
 
@@ -294,8 +294,7 @@ class Shop:
                     if (cust_item_name == sh_item_name):  # if both product names are identical
                         match_exist = + 1  # set to one, meaning there is a matach
 
-                        # check products availability
-                        # sufficient amount of the product in the shop stock
+                        # check whether sufficient amount of the product in the shop stock
                         if (cust_item.quantity <= sh_item.quantity):
                             # update the shop stock(full order)
                             sh_item.quantity = sh_item.quantity - cust_item.quantity
@@ -303,24 +302,18 @@ class Shop:
                                 f"Stock quantity of {cust_item.product.name} updated to: {sh_item.quantity:.0f}")
 
                         else:  # customer wants more than in stock
-                            # check how many can be bought
+                            # buy whole stock of the current item
                             partial_order_qty = cust_item.quantity - \
                                 (cust_item.quantity - sh_item.quantity)
-                            # will buy all that is in stock
 
-                            # perform the cost of the i-th item from the customer's shopping list
-                            sub_total_partial = partial_order_qty * \
-                                sh_item.product.price  # partial qty * price
-
-                            print(
-                                f"Only quantity {partial_order_qty:.0f} of {cust_item.product.name} is available and that many bought. Sub-total cost was €{sub_total_partial:.2f}. ", end="")
+                            # print(f"Only quantity {partial_order_qty:.0f} of {cust_item.product.name} is available and that many bought. Sub-total cost was €{sub_total_partial:.2f}. ", end="")
                             # Prints out cost of all items of the product
 
                             # update the shop stock(partial order)
                             sh_item.quantity = sh_item.quantity - partial_order_qty
 
                             print(
-                                f"Stock updated to {sh_item.quantity:.0f} (nothing left in shop).")
+                                f"Stock quantity of {cust_item.product.name} updated to {sh_item.quantity:.0f}.")
 
                 # if customer wants a product that is not in the shop
                 if (match_exist == 0):  # there is no match of product
@@ -333,7 +326,7 @@ class Shop:
             # update the customer's money
             cust.budget = cust.budget - total_cost
 
-            print(f"Shop has now €{sh.cash:.2f} in cash. ")
+            print(f"\nShop has now €{sh.cash:.2f} in cash. ")
             # updated customer's budget
             print(f"{cust.name}'s remaining money is €{cust.budget:.2f}.")
             print("")
@@ -347,7 +340,7 @@ class Shop:
         # print(f"Budget: {budget:.2f}")  # for testing - ok
 
         # print shops stock
-        print(f"The following products are available in shop:")
+        print(f"\nThe following products are available in shop:")
         print(self)
 
         # declare required variables
@@ -454,13 +447,15 @@ class Shop:
 
     def display_menu(self):
 
+        separator = "+" * 15
+
         while True:  # this is a 'forever' loop, unless interupted (break)
 
             # Main menu screen
             print("")
-            print("+" * 15)
+            print(separator)
             print("Shop Main Menu (Python OOP):")
-            print("+" * 15)
+            print(separator)
             print("1 - Shop status")
             print("2 - Customer A - good case")
             print("3 - Customer B - insufficient funds case")
@@ -468,7 +463,7 @@ class Shop:
             print("5 - Interactive mode")
             print("9 - Exit application\n")
             print("NB: The sequence of the customers being processed might affect the initial case of the customers.")
-            print("+" * 15)
+            print(separator)
 
             # Request input from the user, assign to variable choice
             choice = input("Enter your choice: ")
@@ -476,7 +471,7 @@ class Shop:
             if (choice == "1"):
                 # print("in display_menu option 1 ")  # for testing - ok
                 # print shop stock)
-                print(self)  # for testing - ok
+                print(self)
 
             elif (choice == "2"):
                 # print("    in display_menu option 2 ")  # for testing - ok
@@ -525,7 +520,7 @@ class Shop:
 
                 # print("   in display_menu option 5 ")  # for testing - ok
                 # Welcoming message
-                print("Interactive shopping mode")
+                print("\nInteractive shopping mode")
                 print("-------------------------")
 
                 # # get user's name
@@ -554,8 +549,7 @@ class Shop:
 
     def __repr__(self):
         str = ""
-        str += f"\nShop has {self.cash:.2f} in cash\n"
-        print("+" * 15)
+        str += f"\nShop has {self.cash:.2f} in cash \n==== ==== ====\n"
         for item in self.stock:
             str += f"{item}\n"
 
