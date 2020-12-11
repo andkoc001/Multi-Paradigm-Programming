@@ -365,7 +365,7 @@ def interactive_mode(sh, budget):
                         print(
                             f"Unfortunately, you do not have enough money for that many - short of €{(sub_total - budget):.2f}. ", end="")
                         print(
-                            f"Shopping aborted. Come back with more money or reduce the quantity.")
+                            f"Come back with more money or reduce the quantity.")
 
                 # customer wants more than in stock
                 else:
@@ -511,7 +511,7 @@ def shop_menu(shop):
 
             # get user's budget
             budget = float(
-                input("Enter your budget in whole Euros (without cents): "))
+                input("Enter your budget: "))
 
             # go to the interactive mode
             interactive_mode(shop, budget)

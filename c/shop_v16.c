@@ -184,7 +184,7 @@ struct Customer create_customer(char *path_to_customer)
   // To convert string into intiger, we will use "atoi" method, and to float - "atof" method.
   char *name = malloc(sizeof(char) * 50); // max length of the customer name to be read from file is limited to 50 characters
   strcpy(name, nam);                      // copies variable 'nam' (initialised in the line above) to string variable 'name'
-  int budget = atof(bud);
+  double budget = atof(bud);
 
   //assign name and budget to the customer - use the above variables (name and budget)
   struct Customer customer = {name, budget};
@@ -483,7 +483,7 @@ void interactive_mode(struct Shop *sh, double *budget)
           else
           {
             printf("Unfortunately, you do not have enough money for all the desired items - short of €%.2f. ", (sub_total - *budget));
-            printf("Shopping aborted. Come back with more money or reduce the quantity.\n");
+            printf("Come back with more money or reduce the quantity.\n");
           }
         }
 
@@ -624,10 +624,10 @@ void shop_menu(struct Shop sh)
       printf("Welcome, %s. \n", customer_name);
 
       // get user's budget
-      printf("Enter your budget in whole Euros (without cents): ");
-      int euro; // declare the variable
-      scanf("%d", &euro);
-      double budget = euro; // change to float number
+      printf("Enter your budget: ");
+      double budget; // declare the variable
+      scanf("%lf", &budget);
+      // printf("Confirming entering budget: €%.2f. \n", budget); // for testing - ok
       interactive_mode(&sh, &budget);
 
       break;

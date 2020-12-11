@@ -410,7 +410,7 @@ class Shop:
                             print(
                                 f"Unfortunately, you do not have enough money for that many - short of €{(sub_total - budget):.2f}. ", end="")
                             print(
-                                f"Shopping aborted. Come back with more money or reduce the quantity.\n")
+                                f"Come back with more money or reduce the quantity.\n")
 
                     # customer wants more than in stock
                     else:
@@ -530,7 +530,7 @@ class Shop:
 
                 # # get user's budget
                 self.budget = float(
-                    input("Enter your budget in whole Euros (without cents): "))
+                    input("Enter your budget: "))
 
                 # # go to the interactive mode
                 self.interactive_mode(self, self.budget)
